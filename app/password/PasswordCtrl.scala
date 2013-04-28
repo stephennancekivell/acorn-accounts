@@ -14,7 +14,7 @@ object PasswordCtrl extends Controller {
   }
   
   def create = Action(parse.json) { request =>
-    val x= Json.fromJson[Password](request.body)(Password.passwordReads)
+    val x= Json.fromJson[Password](request.body)
     x.asOpt.map{ p =>  
       Ok(Password.insert(p).toString)
     }.getOrElse{
