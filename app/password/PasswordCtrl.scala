@@ -2,9 +2,7 @@ package password
 
 import play.api._
 import play.api.mvc._
-
 import play.api.libs.json._
-
 import anorm._
 
 object PasswordCtrl extends Controller {
@@ -20,10 +18,29 @@ object PasswordCtrl extends Controller {
     }
   }
   
+  def post = Action(parse.json) { implicit request =>
+    val x= Json.fromJson[Password](request.body)
+    x.asOpt match {
+      case Some(p) =>
+        p.id.get match {
+          case -1 => {
+            Ok(Json.toJson(Password.create(p)))
+          }
+          case _ => {
+            // TODO: should update
+            BadRequest
+          }
+        }
+      case None => {
+        BadRequest
+      }
+    }
+  }
+  
   def create = Action(parse.json) { request =>
     val x= Json.fromJson[Password](request.body)
     x.asOpt.map{ p =>  
-      Ok(Password.insert(p).toString)
+      Ok(Password.create(p).toString)
     }.getOrElse{
       BadRequest("Missing parameter [password]")
     }

@@ -39,7 +39,7 @@ object Password {
     }
   }
 
-  def insert(password: Password) = {
+  def create(password: Password) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
@@ -47,7 +47,7 @@ object Password {
     		  {password}
             )
         """).on('password -> password.password)
-        .executeUpdate()
+        .executeInsert()
     }
   }
 
