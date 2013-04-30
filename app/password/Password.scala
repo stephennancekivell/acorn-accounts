@@ -26,6 +26,18 @@ object Password {
         .as(Password.parser.*)
     }
   }
+  
+  def getOne(id: String) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+          """
+          select * from password
+          where id = {id}
+          """
+      ).on("id" -> id)
+      .as(Password.parser.singleOpt)
+    }
+  }
 
   def insert(password: Password) = {
     DB.withConnection { implicit connection =>

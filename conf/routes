@@ -5,6 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 GET		/passwords					password.PasswordCtrl.list
+GET		/passwords/:id				password.PasswordCtrl.get(id: String)
 POST	/passwords					password.PasswordCtrl.create
 
 # Map static resources from the /public folder to the /assets URL path
