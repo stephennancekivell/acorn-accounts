@@ -40,7 +40,7 @@ object Password {
   }
 
   def create(password: Password) = {
-    DB.withConnection { implicit connection =>
+    val newId = DB.withConnection { implicit connection =>
       SQL(
         """
             insert into Password (password) values  (
@@ -48,6 +48,10 @@ object Password {
             )
         """).on('password -> password.password)
         .executeInsert()
+    }
+    newId match{
+      case Some(p) => Some(Password(id=Id(p), password = password.password))
+      case None => None
     }
   }
 

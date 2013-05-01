@@ -39,8 +39,11 @@ object PasswordCtrl extends Controller {
   
   def create = Action(parse.json) { request =>
     val x= Json.fromJson[Password](request.body)
-    x.asOpt.map{ p =>  
-      Ok(Password.create(p).toString)
+    x.asOpt.map{ p =>
+      Password.create(p) match {
+        case Some(pp) => Ok(Json.toJson(pp))
+        case None => BadRequest("Error inserting")
+      }
     }.getOrElse{
       BadRequest("Missing parameter [password]")
     }
