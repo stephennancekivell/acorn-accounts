@@ -18,28 +18,21 @@ object PasswordCtrl extends Controller {
     }
   }
   
-  def post = Action(parse.json) { implicit request =>
-    val x= Json.fromJson[Password](request.body)
-    x.asOpt match {
-      case Some(p) =>
-        p.id.get match {
-          case -1 => {
-            Ok(Json.toJson(Password.create(p)))
-          }
-          case _ => {
-            // TODO: should update
-            BadRequest
-          }
-        }
-      case None => {
-        BadRequest
+  def update(id: String) = Action(parse.json) { implicit request =>
+    val in = Json.fromJson[Password](request.body)
+    in.asOpt.map { in =>
+      Password.update(in) match {
+        case Some(p) => Accepted
+        case None => NotFound("")
       }
+    }.getOrElse {
+      BadRequest("couldnt parse request")
     }
   }
   
-  def create = Action(parse.json) { request =>
-    val x= Json.fromJson[Password](request.body)
-    x.asOpt.map{ p =>
+  def create = Action(parse.json) { implicit request =>
+    val in= Json.fromJson[Password](request.body)
+    in.asOpt.map{ p =>
       Password.create(p) match {
         case Some(pp) => Ok(Json.toJson(pp))
         case None => BadRequest("Error inserting")

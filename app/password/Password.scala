@@ -38,12 +38,29 @@ object Password {
       .as(Password.parser.singleOpt)
     }
   }
+  
+  def update(password: Password) = {
+    val count = DB.withConnection { implicit connection =>
+      SQL(
+          """
+          update password
+          set password = {pw}
+          where id = {id}
+          """
+          ).on("id" -> password.id, "pw" -> password.password).executeUpdate()
+    }
+    count match {
+      case 0 => None
+      case 1 => Some(password)
+      case x:Int => throw new Exception("updated more passwords than expected: "+x)
+    }
+  }
 
   def create(password: Password) = {
     val newId = DB.withConnection { implicit connection =>
       SQL(
         """
-            insert into Password (password) values  (
+            insert into password (password) values  (
     		  {password}
             )
         """).on('password -> password.password)

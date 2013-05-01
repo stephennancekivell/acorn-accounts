@@ -6,7 +6,8 @@
 GET     /                           controllers.Application.index
 GET		/passwords					password.PasswordCtrl.list
 GET		/passwords/:id				password.PasswordCtrl.get(id: String)
-POST	/passwords					password.PasswordCtrl.create
+POST	/passwords/-1				password.PasswordCtrl.create
+POST	/passwords/:id				password.PasswordCtrl.update(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
