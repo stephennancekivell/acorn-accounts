@@ -1,8 +1,9 @@
-package auth
+package info.stephenn.passwordsafe.auth
 
-import org.squeryl.KeyedEntity
-import play.api.libs.json._
+import org.squeryl._
 import org.squeryl.PrimitiveTypeMode.inTransaction
+import play.api.libs.json._
+import play.api.libs.json.Json.toJsFieldJsValueWrapper
 import info.stephenn.passwordsafe.AppDB
 
 case class User(name: Option[String]) extends KeyedEntity[Long] {

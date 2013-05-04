@@ -1,4 +1,4 @@
-package auth
+package info.stephenn.passwordsafe.auth
 
 import play.api.db._
 import play.api.Play.current
@@ -6,26 +6,28 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 
-case class Party(id: Pk[Long] = NotAssigned)
+case class Group(id: Pk[Long] = NotAssigned, name: String)
 
-object Party {
+object Group {
   
   def getAll = DB.withConnection { implicit connection =>
     SQL("""
-        select * from party
+        select * from group
         """).as(parser.*)
   }
   
   def getOne(id: Id[Long]) = DB.withConnection { implicit connection =>
     SQL("""
-        select * from party
+        select * from group
         where id = {id}
         """).on('id -> id).as(parser.singleOpt)
   }
   
+  
   val parser = {
-    get[Pk[Long]]("party.id")  map {
-        case id => Party(id)
+    get[Pk[Long]]("group.id") ~
+      get[String]("group.name") map {
+        case id ~ name => Group(id, name)
       }
   }
 }

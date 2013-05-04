@@ -1,8 +1,9 @@
 
-import auth._
+package info.stephenn.passwordsafe.auth
+
+import org.squeryl.PrimitiveTypeMode.inTransaction
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import org.squeryl.PrimitiveTypeMode.inTransaction
 import play.api.test._
 import play.api.test.Helpers._
 import info.stephenn.passwordsafe.AppDB
