@@ -26,5 +26,5 @@ object Global extends GlobalSettings {
 
 
 object AppDB extends Schema {
-  val userTable = table[SQUser]("user")
+  val userTable = table[User]("user")
 }

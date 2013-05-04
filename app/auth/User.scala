@@ -1,37 +1,33 @@
 package auth
 
-import play.api.db._
-import play.api.Play.current
+import org.squeryl.KeyedEntity
+import play.api.libs.json._
 
-import anorm._
-import anorm.SqlParser._
+import org.squeryl.PrimitiveTypeMode.inTransaction
 
-case class User(id: Pk[Long] = NotAssigned, name: String)
+case class User(name: Option[String]) extends KeyedEntity[Long] {
+  val id: Long = 0
+}
 
 object User {
   
-  def getAll = DB.withConnection { implicit connection =>
-    SQL("""
-        select * from user
-        """).as(parser.*)
+  def list = {
+    inTransaction {
+      AppDB.userTable
+    }
   }
   
-  def create(name: String) = DB.withConnection { implicit connection =>
-    
-  }
+  
+  
+  implicit object UserFormat extends Format[User] {
+    def writes(u: User): JsValue = Json.obj("id" -> u.id, "name" -> u.name)
 
-  def getOne(name: String) = DB.withConnection { implicit connection =>
-    SQL("""
-        select * from user
-        where name = {name}
-        """).on('name -> name)
-      .as(User.parser.singleOpt)
-  }
-
-  val parser = {
-    get[Pk[Long]]("user.id") ~
-      get[String]("user.name") map {
-        case id ~ name => User(id, name)
-      }
+    def reads(js: JsValue) = {
+      val id = (js \ "id").as[Long]
+      val n = (js \ "name").as[String]
+      val u = User(Option(n))
+      
+      JsSuccess(User(name = Option(n)))
+    }
   }
 }
