@@ -1,13 +1,11 @@
 
 import auth._
-
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-
 import org.squeryl.PrimitiveTypeMode.inTransaction
-
 import play.api.test._
 import play.api.test.Helpers._
+import info.stephenn.passwordsafe.AppDB
 
 class SQUserSpec extends FlatSpec with ShouldMatchers {
 

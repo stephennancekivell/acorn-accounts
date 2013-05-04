@@ -3,7 +3,6 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
 GET		/passwords					password.PasswordCtrl.list
 GET		/passwords/:id				password.PasswordCtrl.get(id: String)
 POST	/passwords/-1				password.PasswordCtrl.create

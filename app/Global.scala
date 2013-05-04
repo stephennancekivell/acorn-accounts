@@ -6,9 +6,9 @@ import play.api.GlobalSettings
 
 import play.api.Application
 
-import org.squeryl.Schema
 
-import auth._
+
+
 
 object Global extends GlobalSettings {
 
@@ -22,9 +22,4 @@ object Global extends GlobalSettings {
 
   def getSession(adapter:DatabaseAdapter, app: Application) = Session.create(DB.getConnection()(app), adapter)
 
-}
-
-
-object AppDB extends Schema {
-  val userTable = table[User]("user")
 }

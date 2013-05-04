@@ -2,8 +2,8 @@ package auth
 
 import org.squeryl.KeyedEntity
 import play.api.libs.json._
-
 import org.squeryl.PrimitiveTypeMode.inTransaction
+import info.stephenn.passwordsafe.AppDB
 
 case class User(name: Option[String]) extends KeyedEntity[Long] {
   val id: Long = 0
