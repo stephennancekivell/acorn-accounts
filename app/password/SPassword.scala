@@ -1,5 +1,0 @@
-package password
-
-class SPassword {
-
-}
