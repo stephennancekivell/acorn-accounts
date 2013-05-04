@@ -1,35 +1,33 @@
 package password
 
-import org.specs2.mutable._
+
+import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
+
+import org.squeryl.PrimitiveTypeMode.inTransaction
+
 import play.api.test._
 import play.api.test.Helpers._
-import anorm.Id
 
-import org.specs2.runner.JUnitRunner
-import org.junit.runner.RunWith
+import anorm.Id
 
 import play.api.libs.json._
 
-/**
- * Add your spec here.
- * You can mock out a whole application including requests, plugins etc.
- * For more information, consult the wiki.
- */
-@RunWith(classOf[JUnitRunner])
-class PasswordSpec extends Specification {
-  "json parsing" should {
-    "Object to json String" in {
-      val p = Password(Id(2), "Password10")
+class PasswordSpec extends FlatSpec with ShouldMatchers {
+  
+  "json pasrser" should "make the json" in {
+      val p = Password(Id(2), "Password10", "title", "desc")
       
-      val j = Password.PasswordFormat.writes(p)
-      j.toString must equalTo("""{"id":2,"password":"Password10"}""")
-    }
-    
-    "json string to Object" in {
-      val pw = Password.PasswordFormat.reads(Json.parse("""{"id":2,"password":"Password10"}""")).get
+    val j = Password.PasswordFormat.writes(p)
+      j.toString should equal("""{"id":2,"password":"Password10","title":"title","description":"desc"}""")
+  }
+  
+  "json parser" should "make the object" in {
+      val pw = Password.PasswordFormat.reads(Json.parse("""{"id":2,"password":"Password10", "title":"title", "description":"desc"}""")).get
       
-      pw.id must equalTo(Id(2))
-      pw.password must equalTo("Password10")
-    }
+      pw.id should equal (Id(2))
+      pw.password should equal ("Password10")
+      pw.title should equal("title")
+      pw.description should equal ("desc")
   }
 }

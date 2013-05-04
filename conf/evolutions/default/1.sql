@@ -10,6 +10,20 @@ CREATE TABLE Password (
     PRIMARY KEY (id)
 );
  
+ 
+
+create sequence s_user_id;
+
+create table user (
+  id    bigint DEFAULT nextval('s_user_id'),
+  name  varchar(128)
+);
+
+
+
 # --- !Downs
  
 DROP TABLE Password;
+
+drop table user;
+drop sequence s_user_id;
