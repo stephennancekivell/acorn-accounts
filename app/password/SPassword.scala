@@ -1,0 +1,5 @@
+package password
+
+class SPassword {
+
+}
