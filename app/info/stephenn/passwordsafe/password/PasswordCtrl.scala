@@ -3,6 +3,7 @@ package info.stephenn.passwordsafe.password
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
+import info.stephenn.passwordsafe.auth._
 
 object PasswordCtrl extends Controller {
   
@@ -31,15 +32,36 @@ object PasswordCtrl extends Controller {
   }
   
   def create = Action(parse.json) { implicit request =>
+    
     val in= Json.fromJson[Password](request.body)
-    in.asOpt.map{ p =>
-      val pp = Password.create(p)
-      //get user
-      //create permission to user read and write
+    in.asOpt.map{ passwordIn =>
+      val password = Password.create(passwordIn)
       
-      Ok(Json.toJson(pp))
+      //create permission to user read and write
+      getUserName match {
+        case None => BadRequest("couldnt find username")
+        case Some(userName) => {
+          User.get(userName) match {
+            case None => NotFound("couldnt find user")
+            case Some(user) => {
+              Party.getIndividual(user) match {
+                case None => FailedDependency("couldnt find individual")
+                case Some(party) => {
+                  Permission.create(Permission(password, party, true, true))
+                }
+              }
+            } 
+          }
+        }
+      }
+      
+      Ok(Json.toJson(password))
     }.getOrElse{
       BadRequest("Missing parameter [password]")
     }
+  }
+  
+  def getUserName(implicit r: Request[Any]) = {
+    r.headers.get("x-remote-user")
   }
 }

@@ -1,7 +1,8 @@
 package info.stephenn.passwordsafe.auth
 
 import org.squeryl._
-import org.squeryl.PrimitiveTypeMode.inTransaction
+import org.squeryl.dsl._
+import org.squeryl.PrimitiveTypeMode._
 import play.api.libs.json._
 import play.api.libs.json.Json._
 import info.stephenn.passwordsafe.AppDB
@@ -27,6 +28,10 @@ object User {
   
   def getOne(id: Long) = inTransaction {
     AppDB.userTable.get[Long](id)
+  }
+  
+  def get(name: String) = inTransaction {
+    from(AppDB.userTable)(u => where(u.name === name) select(u)).headOption
   }
   
   def update(user: User) = inTransaction {

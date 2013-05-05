@@ -15,7 +15,7 @@ class PermissionSpec extends FlatSpec with ShouldMatchers {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
         val pass = Password.create(new Password(0, "", "", ""))
-        val party = Party.create(new Party(0, "Blue team"))
+        val party = Party.create(Party(0, "Blue team"))
 
         val perm = Permission.create(Permission(pass, party, true, true))
 

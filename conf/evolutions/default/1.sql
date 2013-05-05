@@ -8,6 +8,7 @@ create table user (
   id    bigint DEFAULT nextval('s_user_id'),
   name  varchar(128)
 );
+alter table user add constraint user1 unique (name);
 
 create sequence s_password_id;
 
@@ -21,8 +22,9 @@ create table password (
 create sequence s_party_id;
 
 create table party (
-  id    bigint DEFAULT nextval('s_party_id'),
-  name varchar(256)
+  id		    bigint DEFAULT nextval('s_party_id'),
+  name 			varchar(256),
+  isindividual	boolean
 );
 
 create table userparty (

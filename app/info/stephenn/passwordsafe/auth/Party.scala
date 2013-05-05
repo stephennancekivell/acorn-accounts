@@ -8,11 +8,14 @@ import play.api.libs.json.Json._
 import info.stephenn.passwordsafe.AppDB
 import play.Logger
 
-case class Party(var id: Long, var name: String) extends KeyedEntity[Long] {
+case class Party(var id: Long, var name: String, isIndividual: Boolean) extends KeyedEntity[Long] {
   lazy val users = AppDB.userParty.left(this)
   lazy val passwordPermissions = AppDB.partyPasswordPermission.left(this)
 
   def setUsers(usersToSet: Set[User]) = inTransaction {
+    if (isIndividual && usersToSet.size > 1)
+      throw new UnsupportedOperationException("A party that isIndividual can only have one user.")
+    
     val currentUsers = users.toSet[User]
     
     val newUsers = usersToSet.filter(!currentUsers.contains(_))
@@ -29,17 +32,30 @@ case class Party(var id: Long, var name: String) extends KeyedEntity[Long] {
 }
 
 object Party {
+  def apply(id: Long, name:String) = {
+    new Party(id, name, false)
+  }
 
   def getOne(id: Long) = inTransaction {
     AppDB.partyTable.get[Long](id)
   }
   
-  def get(user: User) = inTransaction {
-    
-  }
-
   def list = inTransaction {
     AppDB.partyTable.iterator.toList
+  }
+  
+  def groups = inTransaction {
+    from(AppDB.partyTable)(p =>
+	      where(p.isIndividual === false)
+	      select(p)
+      )
+  }
+  
+  def getIndividual(user: User) = inTransaction {
+    from(AppDB.partyTable, AppDB.userPartyTable)((p, up) =>
+	        where(up.userID === user.id and up.partyID === p.id and p.isIndividual === true)
+	        select(p)
+        ).headOption
   }
 
   def update(p: Party) = inTransaction {

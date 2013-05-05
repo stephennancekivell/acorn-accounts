@@ -16,7 +16,7 @@ class PartySpec extends FlatSpec with ShouldMatchers {
     val u1 = User.create(new User("1", 0))
     val u2 = User.create(new User("2", 0))
 
-    var p1 = Party.create(new Party(0, ""))
+    var p1 = Party.create(Party(0, ""))
     p1.id should not equal (0)
 
     AppDB.userPartyTable.insert(Seq(UserParty(u1, p1), UserParty(u2, p1)))
