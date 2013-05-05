@@ -43,8 +43,7 @@ object Party {
   implicit object PartyFormat extends Format[Party] {
     def writes(u: Party): JsValue = Json.obj(
       "id" -> u.id,
-      "name" -> u.name,
-      "users" -> u.users)
+      "name" -> u.name)
 
     def reads(js: JsValue) = {
       val id = (js \ "id").as[Long]

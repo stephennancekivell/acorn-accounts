@@ -6,7 +6,7 @@ import play.api.libs.json._
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text, optional}
 
-class PartyCtrl extends Controller {
+object PartyCtrl extends Controller {
   
   def list = Action { implicit request =>
     Ok(Json.toJson(Party.list))

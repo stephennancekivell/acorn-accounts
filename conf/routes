@@ -13,5 +13,11 @@ GET		/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.get(id: String)
 POST	/users/-1					info.stephenn.passwordsafe.auth.UserCtrl.create
 POST	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.update(id: String)
 
+GET		/parties					info.stephenn.passwordsafe.auth.PartyCtrl.list
+GET		/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.get(id: String)
+POST	/parties/-1					info.stephenn.passwordsafe.auth.PartyCtrl.create
+POST	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.update(id: String)
+POST	/parties/:id/users			info.stephenn.passwordsafe.auth.PartyCtrl.updateUsers(id: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
