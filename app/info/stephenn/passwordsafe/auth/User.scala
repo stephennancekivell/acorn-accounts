@@ -12,6 +12,10 @@ import org.squeryl.dsl._
 
 case class User(var name: String, var id: Long) extends KeyedEntity[Long] {
   lazy val parties = AppDB.userParty.right(this)
+  
+  def delete = inTransaction {
+    AppDB.userTable.delete(id)
+  }
 }
 
 object User {

@@ -15,6 +15,11 @@ object PasswordCtrl extends Controller {
     Ok(Json.toJson(p))
   }
   
+  def delete(id: String) = Action { implicit request =>
+    Password.getOne(id.toLong).delete
+    Accepted
+  }
+  
   def update(id: String) = Action(parse.json) { implicit request =>
     val in = Json.fromJson[Password](request.body)
     in.asOpt.map { in =>

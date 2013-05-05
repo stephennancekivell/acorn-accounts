@@ -20,6 +20,11 @@ object UserCtrl extends Controller {
     Ok(Json.toJson(u))
   }
   
+  def delete(id: String) = Action { implicit request =>
+    User.getOne(id.toLong).delete
+    Accepted
+  }
+  
   def update(id: String) = Action(parse.json) { implicit request =>
     val in = Json.fromJson[User](request.body)
     in.asOpt.map { in =>

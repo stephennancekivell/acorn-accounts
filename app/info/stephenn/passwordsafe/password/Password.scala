@@ -14,6 +14,10 @@ class Password(
     var password: String,
     var title: String,
     var description: String) extends KeyedEntity[Long] {
+  
+  def delete = inTransaction {
+    AppDB.passwordTable.delete(id)
+  }
 }
 
 object Password {

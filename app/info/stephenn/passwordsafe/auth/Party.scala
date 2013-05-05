@@ -20,6 +20,11 @@ case class Party(var id: Long, var name: String) extends KeyedEntity[Long] {
     removedUsers.foreach(u => UserParty.remove(UserParty(u, this)))
     newUsers.foreach(u => UserParty.create(UserParty(u, this)))
   }
+  
+  def delete = inTransaction {
+    //TODO delete the userParties
+    AppDB.partyTable.delete(id)
+  }
 }
 
 object Party {

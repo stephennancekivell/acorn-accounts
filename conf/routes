@@ -7,16 +7,19 @@ GET		/passwords					info.stephenn.passwordsafe.password.PasswordCtrl.list
 GET		/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.get(id: String)
 POST	/passwords/-1				info.stephenn.passwordsafe.password.PasswordCtrl.create
 POST	/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.update(id: String)
+DELETE	/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.delete(id: String)
 
 GET		/users						info.stephenn.passwordsafe.auth.UserCtrl.list
 GET		/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.get(id: String)
 POST	/users/-1					info.stephenn.passwordsafe.auth.UserCtrl.create
 POST	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.update(id: String)
+DELETE	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.delete(id: String)
 
 GET		/parties					info.stephenn.passwordsafe.auth.PartyCtrl.list
 GET		/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.get(id: String)
 POST	/parties/-1					info.stephenn.passwordsafe.auth.PartyCtrl.create
 POST	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.update(id: String)
+DELETE	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.delete(id: String)
 POST	/parties/:id/users			info.stephenn.passwordsafe.auth.PartyCtrl.updateUsers(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
