@@ -11,6 +11,7 @@ import org.squeryl.PrimitiveTypeMode._
 import org.squeryl.dsl._
 
 case class User(var name: String, var id: Long) extends KeyedEntity[Long] {
+  lazy val parties = AppDB.userParty.right(this)
 }
 
 object User {

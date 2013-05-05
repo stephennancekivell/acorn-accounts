@@ -18,6 +18,19 @@ create table password (
   description varchar(4000)
 );
 
+create sequence s_party_id;
+
+create table party (
+  partyid    bigint DEFAULT nextval('s_party_id'),
+  userid    bigint,
+  name varchar(256)
+);
+
+create table userparty (
+  partyid    bigint,
+  userid	 bigint
+);
+
 
 
 # --- !Downs
@@ -27,3 +40,8 @@ drop sequence s_user_id;
 
 drop table password;
 drop sequence s_password_id;
+
+drop table party;
+drop sequence s_party_id;
+
+drop table userparty;
