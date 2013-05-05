@@ -31,6 +31,14 @@ create table userparty (
 );
 alter table userparty add constraint userparty1 unique (partyid, userid);
 
+create table passwordpermission(
+	partyid		bigint,
+	passwordid	bigint,
+	canwrite	boolean,
+	canread		boolean
+);
+alter table passwordpermission add constraint passwordpermission1 unique (partyid, passwordid);
+
 # --- !Downs
 
 drop table user;
@@ -43,3 +51,5 @@ drop table party;
 drop sequence s_party_id;
 
 drop table userparty;
+
+drop table passwordpermission;

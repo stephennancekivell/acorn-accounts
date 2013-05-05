@@ -34,6 +34,9 @@ object PasswordCtrl extends Controller {
     val in= Json.fromJson[Password](request.body)
     in.asOpt.map{ p =>
       val pp = Password.create(p)
+      //get user
+      //create permission to user read and write
+      
       Ok(Json.toJson(pp))
     }.getOrElse{
       BadRequest("Missing parameter [password]")

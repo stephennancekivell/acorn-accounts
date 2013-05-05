@@ -14,6 +14,7 @@ class Password(
     var password: String,
     var title: String,
     var description: String) extends KeyedEntity[Long] {
+  lazy val partyPermissions = AppDB.passwordPasswordPermission.left(this)
   
   def delete = inTransaction {
     AppDB.passwordTable.delete(id)

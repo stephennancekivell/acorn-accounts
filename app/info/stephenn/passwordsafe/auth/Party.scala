@@ -10,6 +10,7 @@ import play.Logger
 
 case class Party(var id: Long, var name: String) extends KeyedEntity[Long] {
   lazy val users = AppDB.userParty.left(this)
+  lazy val passwordPermissions = AppDB.partyPasswordPermission.left(this)
 
   def setUsers(usersToSet: Set[User]) = inTransaction {
     val currentUsers = users.toSet[User]
@@ -31,6 +32,10 @@ object Party {
 
   def getOne(id: Long) = inTransaction {
     AppDB.partyTable.get[Long](id)
+  }
+  
+  def get(user: User) = inTransaction {
+    
   }
 
   def list = inTransaction {
