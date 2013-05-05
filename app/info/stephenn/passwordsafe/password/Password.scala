@@ -10,8 +10,11 @@ import org.squeryl.PrimitiveTypeMode._
 
 import org.squeryl.dsl._
 
-class Password(var password: String, var title: String, var description: String) extends KeyedEntity[Long] {
-  var id: Long = 0
+class Password(
+    var id: Long = 0 ,
+    var password: String,
+    var title: String,
+    var description: String) extends KeyedEntity[Long] {
 }
 
 object Password {
@@ -40,6 +43,7 @@ object Password {
       val pw = (js \ "password").as[String]
       
       JsSuccess(new Password(
+          id = id,
           password = pw,
           title = (js \ "title").as[String],
           description = (js \ "description").as[String]))
