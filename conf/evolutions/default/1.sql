@@ -21,8 +21,7 @@ create table password (
 create sequence s_party_id;
 
 create table party (
-  partyid    bigint DEFAULT nextval('s_party_id'),
-  userid    bigint,
+  id    bigint DEFAULT nextval('s_party_id'),
   name varchar(256)
 );
 

@@ -7,7 +7,6 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, text, optional}
 
 import org.squeryl.PrimitiveTypeMode._
-//import models.{AppDB, Bar}
 
 
 object UserCtrl extends Controller {

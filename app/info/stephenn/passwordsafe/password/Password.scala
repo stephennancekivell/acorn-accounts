@@ -1,13 +1,13 @@
 package info.stephenn.passwordsafe.password
 
 import org.squeryl._
-import org.squeryl.PrimitiveTypeMode.inTransaction
+import org.squeryl.dsl._
+import org.squeryl.PrimitiveTypeMode._
+
 import play.api.libs.json._
 import play.api.libs.json.Json._
+
 import info.stephenn.passwordsafe.AppDB
-import org.squeryl.PrimitiveTypeMode._
-import org.squeryl.dsl._
-import play.Logger
 
 class Password(
     var id: Long = 0 ,
