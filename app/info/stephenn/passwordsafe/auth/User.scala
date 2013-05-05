@@ -6,16 +6,22 @@ import play.api.libs.json._
 import play.api.libs.json.Json.toJsFieldJsValueWrapper
 import info.stephenn.passwordsafe.AppDB
 
+import org.squeryl.PrimitiveTypeMode._
+
+import org.squeryl.dsl._
+
+
 case class User(name: Option[String]) extends KeyedEntity[Long] {
   val id: Long = 0
 }
 
 object User {
+  import info.stephenn.passwordsafe.AppDB._
   
-  def list = {
-    inTransaction {
-      AppDB.userTable
-    }
+  def list = inTransaction {
+      from(AppDB.userTable)(u =>
+        	select(u)
+        ).seq
   }
   
   
