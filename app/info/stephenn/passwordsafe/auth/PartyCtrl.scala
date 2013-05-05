@@ -34,11 +34,8 @@ class PartyCtrl extends Controller {
       
       //sync the lists
       val users = jsonUsers.map(u => User.getOne(u.id))
-      
-      UserParty.deletePartiesUsers(party)
-      
-      users.foreach(u => UserParty.create(UserParty(u, party)))
-      
+      party.setUsers(users.toSet[User])
+            
       Accepted
     }.getOrElse {
       BadRequest("couldnt parse request")

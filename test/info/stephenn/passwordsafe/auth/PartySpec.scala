@@ -12,7 +12,7 @@ import play.api.libs.json._
 
 class PartySpec extends FlatSpec with ShouldMatchers {
 
-  def makePartyTwoUsers {
+  def makePartyTwoUsers = {
     val u1 = User.create(new User("1", 0))
     val u2 = User.create(new User("2", 0))
 
@@ -20,6 +20,7 @@ class PartySpec extends FlatSpec with ShouldMatchers {
     p1.id should not equal (0)
 
     AppDB.userPartyTable.insert(Seq(UserParty(u1, p1), UserParty(u2, p1)))
+    p1
   }
 
   "A Party" should "be many users" in {
@@ -48,6 +49,24 @@ class PartySpec extends FlatSpec with ShouldMatchers {
     }
   }
 
+  "Party" should "set users" in {
+    running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
+      inTransaction {
+        val p = makePartyTwoUsers
+        
+        val u3 = User.create(new User("3", 0))
+        val u4 = User.create(new User("4", 0))
+        
+        p.setUsers(Set(u3,u4))
+        
+        p.users.toList.length should equal(2)
+        val names = p.users.map(_.name)
+        names should contain("3")
+        names should contain("4")
+      }
+    }
+  }
+
   "Party" should "make json" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
@@ -69,6 +88,5 @@ class PartySpec extends FlatSpec with ShouldMatchers {
         party.users.toList.length should equal(0)
       }
     }
-
   }
 }
