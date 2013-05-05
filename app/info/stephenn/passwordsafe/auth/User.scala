@@ -3,7 +3,7 @@ package info.stephenn.passwordsafe.auth
 import org.squeryl._
 import org.squeryl.PrimitiveTypeMode.inTransaction
 import play.api.libs.json._
-import play.api.libs.json.Json.toJsFieldJsValueWrapper
+import play.api.libs.json.Json._
 import info.stephenn.passwordsafe.AppDB
 
 import org.squeryl.PrimitiveTypeMode._

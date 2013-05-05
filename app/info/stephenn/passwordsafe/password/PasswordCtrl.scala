@@ -1,4 +1,4 @@
-package password
+package info.stephenn.passwordsafe.password
 
 import play.api._
 import play.api.mvc._
@@ -11,19 +11,15 @@ object PasswordCtrl extends Controller {
   }
   
   def get(id: String) = Action { implicit request =>
-    Password.getOne(id) match {
-      case Some(p) => Ok(Json.toJson(p))
-      case _ => BadRequest
-    }
+    val p = Password.getOne(id.toLong)
+    Ok(Json.toJson(p))
   }
   
   def update(id: String) = Action(parse.json) { implicit request =>
     val in = Json.fromJson[Password](request.body)
     in.asOpt.map { in =>
-      Password.update(in) match {
-        case Some(p) => Accepted
-        case None => NotFound("")
-      }
+      Password.update(in)
+      Accepted
     }.getOrElse {
       BadRequest("couldnt parse request")
     }
@@ -32,10 +28,8 @@ object PasswordCtrl extends Controller {
   def create = Action(parse.json) { implicit request =>
     val in= Json.fromJson[Password](request.body)
     in.asOpt.map{ p =>
-      Password.create(p) match {
-        case Some(pp) => Ok(Json.toJson(pp))
-        case None => BadRequest("Error inserting")
-      }
+      val pp = Password.create(p)
+      Ok(Json.toJson(pp))
     }.getOrElse{
       BadRequest("Missing parameter [password]")
     }
