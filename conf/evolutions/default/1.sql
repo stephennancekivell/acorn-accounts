@@ -30,8 +30,7 @@ create table userparty (
   partyid    bigint,
   userid	 bigint
 );
-
-
+alter table userparty add constraint userparty1 unique (partyid, userid);
 
 # --- !Downs
 
