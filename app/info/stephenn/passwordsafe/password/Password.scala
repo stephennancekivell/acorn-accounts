@@ -5,10 +5,9 @@ import org.squeryl.PrimitiveTypeMode.inTransaction
 import play.api.libs.json._
 import play.api.libs.json.Json._
 import info.stephenn.passwordsafe.AppDB
-
 import org.squeryl.PrimitiveTypeMode._
-
 import org.squeryl.dsl._
+import play.Logger
 
 class Password(
     var id: Long = 0 ,
@@ -19,8 +18,8 @@ class Password(
 
 object Password {
   
-  def list = inTransaction {	    
-	    AppDB.passwordTable.iterator.toIterable
+  def list = inTransaction {
+	AppDB.passwordTable.iterator.toList
   }
   
   def getOne(id: Long) = inTransaction {

@@ -24,7 +24,7 @@ class PasswordSpec extends FlatSpec with ShouldMatchers {
         def p = new Password(0, "", "", "")
         val u = AppDB.passwordTable insert Seq(p, p, p)
         
-        Password.list.toList.length should equal(3)
+        Password.list.length should equal(3)
       }
     }
   }
