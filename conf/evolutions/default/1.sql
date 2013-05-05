@@ -1,16 +1,6 @@
 # Password schema
  
 # --- !Ups
- 
-CREATE TABLE Password (
-    id bigint(20) NOT NULL AUTO_INCREMENT,
-    password varchar(255) NOT NULL,
-    title varchar(1000) NOT NULL,
-    description varchar(4000) NOT NULL,
-    PRIMARY KEY (id)
-);
- 
- 
 
 create sequence s_user_id;
 
@@ -19,11 +9,21 @@ create table user (
   name  varchar(128)
 );
 
+create sequence s_password_id;
+
+create table password (
+  id    bigint DEFAULT nextval('s_password_id'),
+  title  varchar(256),
+  password varchar(256),
+  description varchar(4000)
+);
+
 
 
 # --- !Downs
- 
-DROP TABLE Password;
 
 drop table user;
 drop sequence s_user_id;
+
+drop table password;
+drop sequence s_password_id;
