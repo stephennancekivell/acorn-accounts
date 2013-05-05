@@ -8,5 +8,10 @@ GET		/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.get(id: 
 POST	/passwords/-1				info.stephenn.passwordsafe.password.PasswordCtrl.create
 POST	/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.update(id: String)
 
+GET		/users						info.stephenn.passwordsafe.auth.UserCtrl.list
+GET		/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.get(id: String)
+POST	/users/-1					info.stephenn.passwordsafe.auth.UserCtrl.create
+POST	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.update(id: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -1,31 +1,19 @@
 package info.stephenn.passwordsafe.auth
 
-import play.api.db._
-import play.api.Play.current
+import org.squeryl._
+import org.squeryl.PrimitiveTypeMode.inTransaction
+import play.api.libs.json._
+import play.api.libs.json.Json._
+import info.stephenn.passwordsafe.AppDB
 
-import anorm._
-import anorm.SqlParser._
+import org.squeryl.PrimitiveTypeMode._
 
-case class Party(id: Pk[Long] = NotAssigned)
+import org.squeryl.dsl._
+
+case class Party(var partyId: Long, var userId: Long) extends KeyedEntity[CompositeKey2[Long, Long]] {
+  def id = compositeKey(partyId, userId)
+}
 
 object Party {
   
-  def getAll = DB.withConnection { implicit connection =>
-    SQL("""
-        select * from party
-        """).as(parser.*)
-  }
-  
-  def getOne(id: Id[Long]) = DB.withConnection { implicit connection =>
-    SQL("""
-        select * from party
-        where id = {id}
-        """).on('id -> id).as(parser.singleOpt)
-  }
-  
-  val parser = {
-    get[Pk[Long]]("party.id")  map {
-        case id => Party(id)
-      }
-  }
 }

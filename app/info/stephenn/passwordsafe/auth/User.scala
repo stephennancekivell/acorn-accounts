@@ -10,21 +10,27 @@ import org.squeryl.PrimitiveTypeMode._
 
 import org.squeryl.dsl._
 
-
-case class User(name: Option[String]) extends KeyedEntity[Long] {
-  val id: Long = 0
+case class User(var name: String, var id: Long) extends KeyedEntity[Long] {
 }
 
 object User {
   import info.stephenn.passwordsafe.AppDB._
   
   def list = inTransaction {
-      from(AppDB.userTable)(u =>
-        	select(u)
-        ).seq
+    AppDB.userTable.iterator.toList
   }
   
+  def getOne(id: Long) = inTransaction {
+    AppDB.userTable.get[Long](id)
+  }
   
+  def update(user: User) = inTransaction {
+    AppDB.userTable.update(user)
+  }
+  
+  def create(user: User) = inTransaction {
+    AppDB.userTable.insert(user)
+  }
   
   implicit object UserFormat extends Format[User] {
     def writes(u: User): JsValue = Json.obj("id" -> u.id, "name" -> u.name)
@@ -32,9 +38,8 @@ object User {
     def reads(js: JsValue) = {
       val id = (js \ "id").as[Long]
       val n = (js \ "name").as[String]
-      val u = User(Option(n))
       
-      JsSuccess(User(name = Option(n)))
+      JsSuccess(User(name = n, id = id))
     }
   }
 }
