@@ -1,4 +1,3 @@
-
 package info.stephenn.passwordsafe.auth
 
 import org.squeryl.PrimitiveTypeMode.inTransaction

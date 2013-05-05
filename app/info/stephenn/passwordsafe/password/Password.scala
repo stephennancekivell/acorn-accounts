@@ -10,16 +10,14 @@ import org.squeryl.PrimitiveTypeMode._
 
 import org.squeryl.dsl._
 
-case class Password(password: String, title: String, description: String) extends KeyedEntity[Long] {
-  val id: Long = 0
+class Password(var password: String, var title: String, var description: String) extends KeyedEntity[Long] {
+  var id: Long = 0
 }
 
 object Password {
   
-  def list = inTransaction {
-	  from(AppDB.userTable)(u =>
-	    	select(u)
-	    ).seq
+  def list = inTransaction {	    
+	    AppDB.passwordTable.iterator.toIterable
   }
   
   def getOne(id: Long) = inTransaction {
@@ -41,7 +39,7 @@ object Password {
       val id = (js \ "id").as[Long]
       val pw = (js \ "password").as[String]
       
-      JsSuccess(Password(
+      JsSuccess(new Password(
           password = pw,
           title = (js \ "title").as[String],
           description = (js \ "description").as[String]))
