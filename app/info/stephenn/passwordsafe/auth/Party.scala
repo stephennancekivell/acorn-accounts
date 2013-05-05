@@ -46,9 +46,11 @@ object Party {
   }
 
   implicit object PartyFormat extends Format[Party] {
-    def writes(u: Party): JsValue = Json.obj(
+    def writes(u: Party): JsValue = inTransaction { Json.obj(
       "id" -> u.id,
-      "name" -> u.name)
+      "name" -> u.name,
+      "users" -> u.users)
+    }
 
     def reads(js: JsValue) = {
       val id = (js \ "id").as[Long]
@@ -57,7 +59,6 @@ object Party {
       JsSuccess(Party(name = n, id = id))
     }
   }
-
 }
 
 case class UserParty(val userID: Long, val partyID: Long) extends KeyedEntity[CompositeKey2[Long, Long]] {
