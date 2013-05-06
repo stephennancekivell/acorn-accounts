@@ -11,7 +11,7 @@ import play.Logger
 case class Party(var id: Long, var name: String, isIndividual: Boolean) extends KeyedEntity[Long] {
   lazy val users = AppDB.userParty.left(this)
   lazy val passwordPermissions = AppDB.partyPasswordPermission.left(this)
-
+  
   def setUsers(usersToSet: Set[User]) = inTransaction {
     if (isIndividual && usersToSet.size > 1)
       throw new UnsupportedOperationException("A party that isIndividual can only have one user.")
@@ -44,11 +44,11 @@ object Party {
     AppDB.partyTable.iterator.toList
   }
   
-  def groups = inTransaction {
+  def getGroups = inTransaction {
     from(AppDB.partyTable)(p =>
 	      where(p.isIndividual === false)
 	      select(p)
-      )
+      ).toList
   }
   
   def getIndividual(user: User) = inTransaction {

@@ -12,6 +12,10 @@ object PartyCtrl extends Controller {
     Ok(Json.toJson(Party.list))
   }
   
+  def getGroups = Action { implicit request =>
+    Ok(Json.toJson(Party.getGroups))
+  }
+  
   def get(id: String) = Action { implicit request =>
     val p = Party.getOne(id.toLong)
     Ok(Json.toJson(p))

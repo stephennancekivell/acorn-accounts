@@ -47,7 +47,8 @@ object PasswordCtrl extends Controller {
               Party.getIndividual(user) match {
                 case None => FailedDependency("couldnt find individual")
                 case Some(party) => {
-                  Permission.create(Permission(password, party, true, true))
+                  val perm = Permission.create(Permission(password, party, true, true))
+                  Logger.warn("created perm "+perm.partyID.toString+ " "+perm.passwordID)
                 }
               }
             } 

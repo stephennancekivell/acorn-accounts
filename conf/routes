@@ -22,5 +22,12 @@ POST	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.update(id: String
 DELETE	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.delete(id: String)
 POST	/parties/:id/users			info.stephenn.passwordsafe.auth.PartyCtrl.updateUsers(id: String)
 
+GET		/groups						info.stephenn.passwordsafe.auth.PartyCtrl.getGroups
+GET		/groups/:id					info.stephenn.passwordsafe.auth.PartyCtrl.get(id: String)
+POST	/groups/-1					info.stephenn.passwordsafe.auth.PartyCtrl.create
+POST	/groups/:id					info.stephenn.passwordsafe.auth.PartyCtrl.update(id: String)
+DELETE	/groups/:id					info.stephenn.passwordsafe.auth.PartyCtrl.delete(id: String)
+POST	/groups/:id/users			info.stephenn.passwordsafe.auth.PartyCtrl.updateUsers(id: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

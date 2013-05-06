@@ -6,6 +6,9 @@ import org.squeryl.PrimitiveTypeMode._
 import info.stephenn.passwordsafe.AppDB
 import info.stephenn.passwordsafe.auth._
 
+import play.api.libs.json._
+import play.api.libs.json.Json._
+
 case class Permission(
 		val partyID: Long,
 		val passwordID: Long,
@@ -25,5 +28,23 @@ object Permission {
 
   def create(permission: Permission) = inTransaction {
     AppDB.passwordPermissionTable.insert(permission)
+  }
+  
+  implicit object PermissionFormat extends Format[Permission] {
+    def writes(p: Permission): JsValue = inTransaction {
+      Json.obj("party" -> Party.getOne(p.partyID),
+          "partyID" -> p.partyID,
+          "passwordID" -> p.partyID,
+          "canRead" -> p.canRead,
+          "canWrite" -> p.canWrite)
+    }
+
+    def reads(js: JsValue) = {
+      JsSuccess(new Permission(
+          partyID = (js \ "partyID").as[Long],
+          passwordID = (js \ "passwordID").as[Long],
+          canRead = (js \ "canRead").as[Boolean],
+          canWrite = (js \ "canWrite").as[Boolean]))
+    }
   }
 }

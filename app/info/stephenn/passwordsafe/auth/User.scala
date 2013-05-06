@@ -35,11 +35,20 @@ object User {
   }
   
   def update(user: User) = inTransaction {
-    AppDB.userTable.update(user)
+    val u = AppDB.userTable.update(user)
+    var party = Party.getIndividual(user).get
+    party.name = user.name
+    Party.update(party)
+    
+    u
   }
   
   def create(user: User) = inTransaction {
-    AppDB.userTable.insert(user)
+    val u = AppDB.userTable.insert(user)
+    var party = Party.create(Party(id = -1, name=user.name, isIndividual=true))
+    party.setUsers(Set(user))
+    
+    u
   }
   
   implicit object UserFormat extends Format[User] {

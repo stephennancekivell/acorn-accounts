@@ -40,7 +40,13 @@ object Password {
   }
   
   implicit object PasswordFormat extends Format[Password] {
-    def writes(p: Password): JsValue = Json.obj("id" -> p.id, "password" -> p.password, "title" -> p.title, "description" -> p.description)
+    def writes(p: Password): JsValue = inTransaction {
+      Json.obj("id" -> p.id,
+          "password" -> p.password,
+          "title" -> p.title,
+          "description" -> p.description,
+          "permissions" -> p.partyPermissions.toList)
+    }
 
     def reads(js: JsValue) = {
       val id = (js \ "id").as[Long]
