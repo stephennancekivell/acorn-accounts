@@ -32,33 +32,60 @@ object PasswordCtrl extends Controller {
   }
   
   def create = Action(parse.json) { implicit request =>
-    
     val in= Json.fromJson[Password](request.body)
     in.asOpt.map{ passwordIn =>
       val password = Password.create(passwordIn)
       
-      //create permission to user read and write
-      getUserName match {
-        case None => BadRequest("couldnt find username")
-        case Some(userName) => {
-          User.get(userName) match {
-            case None => NotFound("couldnt find user")
-            case Some(user) => {
-              Party.getIndividual(user) match {
-                case None => FailedDependency("couldnt find individual")
-                case Some(party) => {
-                  val perm = Permission.create(Permission(password, party, true, true))
-                  Logger.warn("created perm "+perm.partyID.toString+ " "+perm.passwordID)
-                }
-              }
-            } 
-          }
+      getIndividual match {
+        case None => NotFound("couldnt find user")
+        case Some(individual) => {
+          Permission.create(Permission(password, individual, true, true))
         }
       }
       
       Ok(Json.toJson(password))
-    }.getOrElse{
+    }.getOrElse {
       BadRequest("Missing parameter [password]")
+    }
+  }
+  
+  def addPermission(passwordID: Long) = Action(parse.json) { implicit request =>
+    Logger.error("adding Permission")
+    val password = Password.getOne(passwordID)
+    val in= Json.fromJson[Permission](request.body)
+    Logger.info("got in"+in)
+    in.asOpt match {
+      case None => BadRequest("permission expected.")
+      case Some(permission) => {
+        getIndividual(request) match {
+          case None => BadRequest("couldnt find individual")
+          case Some(individual) => {
+            password.canRead(individual) match {
+              case false => Forbidden
+              case true => {
+                Permission.create(permission)
+                Accepted
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  def getIndividual(implicit request: Request[_]):Option[Party] = {
+    request.headers.get("x-remote-user").headOption match {
+      case None => {
+        Logger.warn("could not find x-remote-user")
+        None
+      }
+      case Some(username) => User.get(username).headOption match {
+        case None => {
+          Logger.warn("could not find user: "+username)
+          None
+        }
+        case Some(user) => Party.getIndividual(user).headOption
+      }
     }
   }
   

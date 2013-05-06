@@ -8,6 +8,7 @@ import play.api.libs.json._
 import play.api.libs.json.Json._
 
 import info.stephenn.passwordsafe.AppDB
+import info.stephenn.passwordsafe.auth._
 
 class Password(
     var id: Long = 0 ,
@@ -18,6 +19,14 @@ class Password(
   
   def delete = inTransaction {
     AppDB.passwordTable.delete(id)
+  }
+  
+  def canRead(party: Party) = inTransaction {
+    this.partyPermissions.find(perm => perm.partyID == party.id & perm.canRead).isDefined
+  }
+  
+  def canWrite(party: Party) = inTransaction {
+    this.partyPermissions.find(perm => perm.partyID == party.id & perm.canWrite).isDefined
   }
 }
 
