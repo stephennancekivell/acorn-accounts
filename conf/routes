@@ -4,31 +4,33 @@
 
 # Home page
 GET		/passwords					info.stephenn.passwordsafe.password.PasswordCtrl.list
-GET		/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.get(id: String)
+GET		/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.get(id: Long)
 POST	/passwords/-1				info.stephenn.passwordsafe.password.PasswordCtrl.create
-POST	/passwords/{<[0-9]+>id}		info.stephenn.passwordsafe.password.PasswordCtrl.update(id: String)
-DELETE	/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.delete(id: String)
+POST	/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.update(id: Long)
+DELETE	/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.delete(id: Long)
 POST	/passwords/:id/permissions	info.stephenn.passwordsafe.password.PasswordCtrl.addPermission(id: Long)
 
-GET		/users						info.stephenn.passwordsafe.auth.UserCtrl.list
-GET		/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.get(id: String)
-POST	/users/-1					info.stephenn.passwordsafe.auth.UserCtrl.create
-POST	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.update(id: String)
-DELETE	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.delete(id: String)
+GET		/permissions				info.stephenn.passwordsafe.password.PermissionCtrl.list
 
-#GET		/parties					info.stephenn.passwordsafe.auth.PartyCtrl.list
-#GET		/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.get(id: String)
+GET		/users						info.stephenn.passwordsafe.auth.UserCtrl.list
+GET		/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.get(id: Long)
+POST	/users/-1					info.stephenn.passwordsafe.auth.UserCtrl.create
+POST	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.update(id: Long)
+DELETE	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.delete(id: Long)
+
+GET		/parties					info.stephenn.passwordsafe.auth.PartyCtrl.list
+#GET	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.get(id: Long)
 #POST	/parties/-1					info.stephenn.passwordsafe.auth.PartyCtrl.create
-#POST	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.update(id: String)
-#DELETE	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.delete(id: String)
-#POST	/parties/:id/users			info.stephenn.passwordsafe.auth.PartyCtrl.updateUsers(id: String)
+#POST	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.update(id: Long)
+#DELETE	/parties/:id				info.stephenn.passwordsafe.auth.PartyCtrl.delete(id: Long)
+#POST	/parties/:id/users			info.stephenn.passwordsafe.auth.PartyCtrl.updateUsers(id: Long)
 
 GET		/groups						info.stephenn.passwordsafe.auth.PartyCtrl.getGroups
-GET		/groups/:id					info.stephenn.passwordsafe.auth.PartyCtrl.get(id: String)
+GET		/groups/:id					info.stephenn.passwordsafe.auth.PartyCtrl.get(id: Long)
 POST	/groups/-1					info.stephenn.passwordsafe.auth.PartyCtrl.create
-POST	/groups/{<[0-9]+>id}		info.stephenn.passwordsafe.auth.PartyCtrl.update(id: String)
-DELETE	/groups/:id					info.stephenn.passwordsafe.auth.PartyCtrl.delete(id: String)
-POST	/groups/:id/users			info.stephenn.passwordsafe.auth.PartyCtrl.updateUsers(id: String)
+POST	/groups/:id					info.stephenn.passwordsafe.auth.PartyCtrl.update(id: Long)
+DELETE	/groups/:id					info.stephenn.passwordsafe.auth.PartyCtrl.delete(id: Long)
+POST	/groups/:id/users			info.stephenn.passwordsafe.auth.PartyCtrl.updateUsers(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

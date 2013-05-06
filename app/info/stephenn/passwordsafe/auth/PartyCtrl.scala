@@ -16,17 +16,17 @@ object PartyCtrl extends Controller {
     Ok(Json.toJson(Party.getGroups))
   }
   
-  def get(id: String) = Action { implicit request =>
-    val p = Party.getOne(id.toLong)
+  def get(id: Long) = Action { implicit request =>
+    val p = Party.getOne(id)
     Ok(Json.toJson(p))
   }
   
-  def delete(id: String) = Action { implicit request =>
-    Party.getOne(id.toLong).delete
+  def delete(id: Long) = Action { implicit request =>
+    Party.getOne(id).delete
     Accepted
   }
   
-  def update(id: String) = Action(parse.json) { implicit request =>
+  def update(id: Long) = Action(parse.json) { implicit request =>
     val in = Json.fromJson[Party](request.body)
     in.asOpt.map { in =>
       Party.update(in)
@@ -36,10 +36,10 @@ object PartyCtrl extends Controller {
     }
   }
   
-  def updateUsers(partyID: String) = Action(parse.json) { implicit request =>
+  def updateUsers(partyID: Long) = Action(parse.json) { implicit request =>
     val in = Json.fromJson[List[User]](request.body)
     in.asOpt.map {jsonUsers =>
-      val party = Party.getOne(partyID.toLong)
+      val party = Party.getOne(partyID)
       
       //sync the lists
       val users = jsonUsers.map(u => User.getOne(u.id))

@@ -11,17 +11,17 @@ object PasswordCtrl extends Controller {
     Ok(Json.toJson(Password.list))
   }
   
-  def get(id: String) = Action { implicit request =>
-    val p = Password.getOne(id.toLong)
+  def get(id: Long) = Action { implicit request =>
+    val p = Password.getOne(id)
     Ok(Json.toJson(p))
   }
   
-  def delete(id: String) = Action { implicit request =>
-    Password.getOne(id.toLong).delete
+  def delete(id: Long) = Action { implicit request =>
+    Password.getOne(id).delete
     Accepted
   }
   
-  def update(id: String) = Action(parse.json) { implicit request =>
+  def update(id: Long) = Action(parse.json) { implicit request =>
     val in = Json.fromJson[Password](request.body)
     in.asOpt.map { in =>
       Password.update(in)
@@ -50,13 +50,11 @@ object PasswordCtrl extends Controller {
   }
   
   def addPermission(passwordID: Long) = Action(parse.json) { implicit request =>
-    Logger.error("adding Permission")
-    val password = Password.getOne(passwordID)
     val in= Json.fromJson[Permission](request.body)
-    Logger.info("got in"+in)
     in.asOpt match {
       case None => BadRequest("permission expected.")
       case Some(permission) => {
+        val password = Password.getOne(permission.passwordID)
         getIndividual(request) match {
           case None => BadRequest("couldnt find individual")
           case Some(individual) => {

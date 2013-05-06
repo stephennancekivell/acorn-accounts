@@ -22,6 +22,10 @@ object Permission {
     new Permission(password.id, party.id, canRead, canWrite)
   }
   
+  def list = inTransaction {
+	AppDB.passwordPermissionTable.iterator.toList
+  }
+  
   def remove(permission: Permission) = inTransaction {
     AppDB.passwordPermissionTable.deleteWhere(pp => (pp.partyID === permission.partyID) and (pp.passwordID === permission.passwordID))
   }
@@ -34,7 +38,7 @@ object Permission {
     def writes(p: Permission): JsValue = inTransaction {
       Json.obj("party" -> Party.getOne(p.partyID),
           "partyID" -> p.partyID,
-          "passwordID" -> p.partyID,
+          "passwordID" -> p.passwordID,
           "canRead" -> p.canRead,
           "canWrite" -> p.canWrite)
     }
