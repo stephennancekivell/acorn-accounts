@@ -16,7 +16,7 @@ class PartySpec extends FlatSpec with ShouldMatchers {
     val u1 = User.create(new User("1", 0))
     val u2 = User.create(new User("2", 0))
 
-    var p1 = Party.create(Party(0, ""))
+    var p1 = Party.create(Party(0, "Blue Team"))
     p1.id should not equal (0)
 
     AppDB.userPartyTable.insert(Seq(UserParty(u1, p1), UserParty(u2, p1)))
@@ -27,8 +27,9 @@ class PartySpec extends FlatSpec with ShouldMatchers {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
         makePartyTwoUsers
-
-        Party.list.head.users.toList.length should equal(2)
+        
+        val p = Party.list.filter(_.name == "Blue Team").head
+        p.users.toList.length should equal(2)
       }
     }
   }
@@ -36,10 +37,9 @@ class PartySpec extends FlatSpec with ShouldMatchers {
   "A Party" should "be able to remove users" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        makePartyTwoUsers
+        val p = makePartyTwoUsers
 
         val user = User.list.head
-        val p = Party.list.head
 
         AppDB.userPartyTable.deleteWhere(up => (up.userID === user.id) and (up.partyID === p.id))
 
@@ -70,11 +70,9 @@ class PartySpec extends FlatSpec with ShouldMatchers {
   "Party" should "make json" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        makePartyTwoUsers
+        val p = makePartyTwoUsers
 
-        val p = Party.list.head
-
-        Json.toJson(p).toString should equal("""{"id":1,"name":"","users":[{"id":1,"name":"1"},{"id":2,"name":"2"}]}""")
+        Json.toJson(p).toString should equal("""{"id":3,"name":"Blue Team","users":[{"id":1,"name":"1"},{"id":2,"name":"2"}]}""")
       }
     }
   }

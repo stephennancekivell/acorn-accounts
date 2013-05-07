@@ -55,10 +55,14 @@ class PasswordSpec extends FlatSpec with ShouldMatchers {
   }
   
   "json pasrser" should "make the json" in {
-    val p = new Password(0, "Password10", "title", "desc")
-      
-    val j = Password.PasswordFormat.writes(p)
-    j.toString should equal("""{"id":0,"password":"Password10","title":"title","description":"desc"}""")
+    running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
+      inTransaction {
+	    val p = new Password(0, "Password10", "title", "desc")
+	    
+	    val j = Password.PasswordFormat.writes(p)
+	    j.toString should equal("""{"id":0,"password":"Password10","title":"title","description":"desc","permissions":[]}""")
+      }
+    }
   }
   
   "json parser" should "make the object" in {

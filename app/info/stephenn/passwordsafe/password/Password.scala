@@ -3,10 +3,8 @@ package info.stephenn.passwordsafe.password
 import org.squeryl._
 import org.squeryl.dsl._
 import org.squeryl.PrimitiveTypeMode._
-
 import play.api.libs.json._
 import play.api.libs.json.Json._
-
 import info.stephenn.passwordsafe.AppDB
 import info.stephenn.passwordsafe.auth._
 

@@ -17,5 +17,4 @@ class SQUserSpec extends FlatSpec with ShouldMatchers {
       }
     }
   }
-
 }

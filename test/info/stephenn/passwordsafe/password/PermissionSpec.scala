@@ -24,4 +24,19 @@ class PermissionSpec extends FlatSpec with ShouldMatchers {
       }
     }
   }
+
+  "A Password" should "have many parties through their permissions" in {
+    running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
+      inTransaction {
+        val pass = Password.create(new Password(0, "", "", ""))
+        val blue = Party.create(Party(0, "Blue team"))
+        val red = Party.create(Party(0, "Red team"))
+
+        Permission.create(Permission(pass, blue, true, true))
+        Permission.create(Permission(pass, red, true, true))
+
+        pass.partyPermissions.toList.length should equal(2)
+      }
+    }
+  }
 }
