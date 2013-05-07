@@ -32,9 +32,9 @@ class PermissionSpec extends FlatSpec with ShouldMatchers {
         val blue = Party.create(Party(0, "Blue team"))
         val red = Party.create(Party(0, "Red team"))
 
-        Permission.create(Permission(pass, blue, true, true))
-        Permission.create(Permission(pass, red, true, true))
-
+        val p1 = Permission.create(Permission(pass, blue, true, true))
+        val p2 = Permission.create(Permission(pass, red, true, true))
+        
         pass.partyPermissions.toList.length should equal(2)
       }
     }
@@ -51,7 +51,7 @@ class PermissionSpec extends FlatSpec with ShouldMatchers {
         Permission.create(Permission(pass1, party, true, true))
         Permission.create(Permission(pass2, party, true, true))
         
-        party.passwordPermissions.toList.length should equal(1)
+        party.passwordPermissions.toList.length should equal(2)
       }
     }
   }

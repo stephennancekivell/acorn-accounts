@@ -19,7 +19,7 @@ case class Permission(
 
 object Permission {
   def apply(password: Password, party: Party, canRead: Boolean, canWrite: Boolean) = {
-    new Permission(password.id, party.id, canRead, canWrite)
+    new Permission(partyID = party.id, passwordID = password.id, canRead = canRead, canWrite = canWrite)
   }
   
   def list = inTransaction {

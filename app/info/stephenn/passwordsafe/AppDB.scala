@@ -18,7 +18,7 @@ object AppDB extends Schema {
   
   val passwordPermissionTable = table[password.Permission]("passwordPermission")
   val partyPasswordPermission = oneToManyRelation(partyTable, passwordPermissionTable)
-  	.via((party, perm) => (party.id === perm.partyID))
+  	.via((party, perm) => party.id === perm.partyID)
   val passwordPasswordPermission = oneToManyRelation(passwordTable, passwordPermissionTable)
-  	.via((password, perm) => (password.id === perm.partyID))
+  	.via((password, perm) => password.id === perm.passwordID)
 }
