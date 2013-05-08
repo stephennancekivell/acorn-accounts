@@ -28,7 +28,8 @@ case class Party(val id: Long, var name: String, val isIndividual: Boolean) exte
   def delete = inTransaction {
     //TODO delete the userParties
     AppDB.partyTable.delete(id)
-  }
+  }  
+  
 }
 
 object Party {

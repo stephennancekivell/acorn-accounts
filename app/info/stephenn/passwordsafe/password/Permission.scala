@@ -34,6 +34,14 @@ object Permission {
     AppDB.passwordPermissionTable.insertOrUpdate(permission)
   }
   
+  def getUsersPasswords(user: User) = inTransaction {
+    // this should probably have a sub select instead of being a 3 table join
+    from(AppDB.passwordTable, AppDB.passwordPermissionTable, AppDB.userParty)((pass, perm, userParty) =>
+      where(userParty.userID === user.id and userParty.partyID === perm.partyID and perm.passwordID === pass.id)
+      select(pass)
+      ).toList
+  }
+  
   implicit object PermissionFormat extends Format[Permission] {
     def writes(p: Permission): JsValue = inTransaction {
       Json.obj("party" -> Party.getOne(p.partyID),

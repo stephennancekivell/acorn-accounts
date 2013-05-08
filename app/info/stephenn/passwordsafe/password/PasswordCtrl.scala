@@ -8,7 +8,12 @@ import info.stephenn.passwordsafe.auth._
 object PasswordCtrl extends Controller {
   
   def list = Action { implicit request =>
-    Ok(Json.toJson(Password.list))
+    getUser match {
+      case None => Forbidden
+      case Some(user) => {
+        Ok(Json.toJson(Permission.getUsersPasswords(user)))
+      }
+    }
   }
   
   def get(id: Long) = Action { implicit request =>
@@ -101,19 +106,20 @@ object PasswordCtrl extends Controller {
     }
   }
   
-  def getIndividual(implicit request: Request[_]):Option[Party] = {
+  def getUser(implicit request: Request[_]):Option[User] = {
     request.headers.get("x-remote-user").headOption match {
       case None => {
         Logger.warn("could not find x-remote-user")
         None
       }
-      case Some(username) => User.get(username).headOption match {
-        case None => {
-          Logger.warn("could not find user: "+username)
-          None
-        }
-        case Some(user) => Party.getIndividual(user).headOption
-      }
+      case Some(username) => User.get(username)
+    }
+  }
+  
+  def getIndividual(implicit request: Request[_]):Option[Party] = {
+    getUser(request) match {
+      case None => None
+      case Some(user) => Party.getIndividual(user).headOption
     }
   }
   
