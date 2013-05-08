@@ -9,7 +9,7 @@ import info.stephenn.passwordsafe.AppDB
 import info.stephenn.passwordsafe.auth._
 
 class Password(
-    var id: Long = 0 ,
+    val id: Long = 0 ,
     var password: String,
     var title: String,
     var description: String) extends KeyedEntity[Long] {

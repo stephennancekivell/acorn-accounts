@@ -60,7 +60,14 @@ object PasswordCtrl extends Controller {
             password.canWrite(individual) match {
               case false => Forbidden
               case true => {
-                Permission.create(permission)
+                password.getPartyPermissions.find(_.partyID == permission.partyID) match {
+                  case None => Permission.create(permission)
+                  case Some(existingPerm) => {
+                    existingPerm.canRead = permission.canRead
+                    existingPerm.canWrite = permission.canWrite
+                    Permission.create(existingPerm)
+                  }
+                }
                 Accepted
               }
             }

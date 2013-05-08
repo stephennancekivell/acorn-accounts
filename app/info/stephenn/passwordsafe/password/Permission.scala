@@ -12,8 +12,8 @@ import play.api.libs.json.Json._
 case class Permission(
 		val partyID: Long,
 		val passwordID: Long,
-		val canRead: Boolean,
-		val canWrite: Boolean) extends KeyedEntity[CompositeKey2[Long, Long]] {
+		var canRead: Boolean,
+		var canWrite: Boolean) extends KeyedEntity[CompositeKey2[Long, Long]] {
   def id = compositeKey(passwordID, partyID)
 }
 

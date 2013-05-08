@@ -8,7 +8,7 @@ import play.api.libs.json.Json._
 import info.stephenn.passwordsafe.AppDB
 import play.Logger
 
-case class Party(var id: Long, var name: String, isIndividual: Boolean) extends KeyedEntity[Long] {
+case class Party(val id: Long, var name: String, val isIndividual: Boolean) extends KeyedEntity[Long] {
   lazy val users = AppDB.userParty.left(this)
   lazy val passwordPermissions = AppDB.partyPasswordPermission.left(this)
   
