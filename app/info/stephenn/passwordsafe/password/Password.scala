@@ -19,6 +19,10 @@ class Password(
     AppDB.passwordTable.delete(id)
   }
   
+  def getPartyPermissions = inTransaction {
+    partyPermissions.toList
+  }
+  
   def canRead(party: Party) = inTransaction {
     this.partyPermissions.find(perm => perm.partyID == party.id & perm.canRead).isDefined
   }

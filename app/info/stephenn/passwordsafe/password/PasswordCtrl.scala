@@ -50,39 +50,43 @@ object PasswordCtrl extends Controller {
   }
   
   def addPermission(passwordID: Long) = Action(parse.json) { implicit request =>
-   val (res, perm) = validatePermissionRequest(request)
-   perm match {
-     case None => res
-     case Some(permission) => {
-       Permission.create(permission)
-       res
-     }
-   }
-  }
-  
-  def removePermission(passwordID: Long) = Action(parse.json) { implicit request =>
-   val (res, perm) = validatePermissionRequest(request)
-   perm match {
-     case None => res
-     case Some(permission) => {
-       Permission.remove(permission)
-       res
-     }
-   }
-  }
-  
-  def validatePermissionRequest(request: Request[JsValue]): (Result, Option[Permission]) = {
-    val in= Json.fromJson[Permission](request.body)
-    in.asOpt match {
-      case None => (BadRequest("permission expected."), None)
+    Json.fromJson[Permission](request.body).asOpt match {
+      case None => BadRequest("permission expected.")
       case Some(permission) => {
         val password = Password.getOne(permission.passwordID)
         getIndividual(request) match {
-          case None => (BadRequest("couldnt find individual"), None)
+          case None => BadRequest("couldnt find individual")
           case Some(individual) => {
             password.canWrite(individual) match {
-              case false => (Forbidden, None)
-              case true => (Accepted, Option(permission))
+              case false => Forbidden
+              case true => {
+                Permission.create(permission)
+                Accepted
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  def removePermission(passwordID: Long, partyID:Long) = Action { implicit request =>  
+    val password = Password.getOne(passwordID)
+    getIndividual(request) match {
+      case None => Forbidden
+      case Some(individual) => {
+        password.canWrite(individual) match {
+          case false => Forbidden
+          case true => {
+            password.getPartyPermissions.find(_.partyID == partyID) match {
+              case None => {
+                Logger.error("could not find perm "+ password)
+                NotFound
+              }
+              case Some(permission) => {
+                Permission.remove(permission)
+                Accepted
+              }
             }
           }
         }

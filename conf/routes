@@ -9,7 +9,8 @@ POST	/passwords/-1				info.stephenn.passwordsafe.password.PasswordCtrl.create
 POST	/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.update(id: Long)
 DELETE	/passwords/:id				info.stephenn.passwordsafe.password.PasswordCtrl.delete(id: Long)
 POST	/passwords/:id/permissions	info.stephenn.passwordsafe.password.PasswordCtrl.addPermission(id: Long)
-DELETE	/passwords/:id/permissions	info.stephenn.passwordsafe.password.PasswordCtrl.removePermission(id: Long)
+DELETE	/passwords/:pass/permissions/:party	info.stephenn.passwordsafe.password.PasswordCtrl.removePermission(pass: Long, party: Long)
+
 
 GET		/users						info.stephenn.passwordsafe.auth.UserCtrl.list
 GET		/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.get(id: Long)
