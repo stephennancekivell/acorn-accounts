@@ -31,7 +31,7 @@ object Permission {
   }
 
   def create(permission: Permission) = inTransaction {
-    AppDB.passwordPermissionTable.insert(permission)
+    AppDB.passwordPermissionTable.insertOrUpdate(permission)
   }
   
   implicit object PermissionFormat extends Format[Permission] {
