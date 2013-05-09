@@ -9,7 +9,7 @@ import info.stephenn.passwordsafe.auth._
 
 object AppDB extends Schema {
   val userTable = table[User]("user")
-  val passwordTable = table[Password]("password")
+  val accountTable = table[Account]("account")
   val partyTable = table[Party]("party")
   val userPartyTable = table[UserParty]("userParty")
   val userParty = manyToManyRelation(partyTable, userTable).
@@ -19,6 +19,6 @@ object AppDB extends Schema {
   val passwordPermissionTable = table[password.Permission]("passwordPermission")
   val partyPasswordPermission = oneToManyRelation(partyTable, passwordPermissionTable)
   	.via((party, perm) => party.id === perm.partyID)
-  val passwordPasswordPermission = oneToManyRelation(passwordTable, passwordPermissionTable)
-  	.via((password, perm) => password.id === perm.passwordID)
+  val passwordPasswordPermission = oneToManyRelation(accountTable, passwordPermissionTable)
+  	.via((account, perm) => account.id === perm.accountID)
 }

@@ -8,15 +8,15 @@ import play.api.libs.json.Json._
 import info.stephenn.passwordsafe.AppDB
 import info.stephenn.passwordsafe.auth._
 
-class Password(
-    val id: Long = 0 ,
+class Account(
+    val id: Long = 0,
     var password: String,
     var title: String,
     var description: String) extends KeyedEntity[Long] {
-  lazy val partyPermissions = AppDB.passwordPasswordPermission.left(this)
+  lazy val partyPermissions = AppDB.passwordPasswordPermission.left(Account.this)
   
   def delete = inTransaction {
-    AppDB.passwordTable.delete(id)
+    AppDB.accountTable.delete(id)
   }
   
   def getPartyPermissions = inTransaction {
@@ -24,46 +24,46 @@ class Password(
   }
   
   def canRead(party: Party) = inTransaction {
-    this.partyPermissions.find(perm => perm.partyID == party.id & perm.canRead).isDefined
+    Account.this.partyPermissions.find(perm => perm.partyID == party.id & perm.canRead).isDefined
   }
   
   def canWrite(party: Party) = inTransaction {
-    this.partyPermissions.find(perm => perm.partyID == party.id & perm.canWrite).isDefined
+    Account.this.partyPermissions.find(perm => perm.partyID == party.id & perm.canWrite).isDefined
   }
 }
 
-object Password {
+object Account {
   
   def list = inTransaction {
-	AppDB.passwordTable.iterator.toList
+	AppDB.accountTable.iterator.toList
   }
   
   def getOne(id: Long) = inTransaction {
-    AppDB.passwordTable.get[Long](id)
+    AppDB.accountTable.get[Long](id)
   }
   
-  def update(pw: Password) = inTransaction {
-    AppDB.passwordTable.update(pw)
+  def update(account: Account) = inTransaction {
+    AppDB.accountTable.update(account)
   }
   
-  def create(pw: Password) = inTransaction {
-    AppDB.passwordTable.insert(pw)
+  def create(account: Account) = inTransaction {
+    AppDB.accountTable.insert(account)
   }
   
-  implicit object PasswordFormat extends Format[Password] {
-    def writes(p: Password): JsValue = inTransaction {
-      Json.obj("id" -> p.id,
-          "password" -> p.password,
-          "title" -> p.title,
-          "description" -> p.description,
-          "permissions" -> p.partyPermissions.toList)
+  implicit object AccountFormat extends Format[Account] {
+    def writes(account: Account): JsValue = inTransaction {
+      Json.obj("id" -> account.id,
+          "password" -> account.password,
+          "title" -> account.title,
+          "description" -> account.description,
+          "permissions" -> account.partyPermissions.toList)
     }
 
     def reads(js: JsValue) = {
       val id = (js \ "id").as[Long]
       val pw = (js \ "password").as[String]
       
-      JsSuccess(new Password(
+      JsSuccess(new Account(
           id = id,
           password = pw,
           title = (js \ "title").as[String],

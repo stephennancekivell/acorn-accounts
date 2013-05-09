@@ -12,7 +12,7 @@ class PasswordSpec extends FlatSpec with ShouldMatchers {
   "A Password" should "be creatable" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        val p = Password.create(new Password(0, "", "", ""))
+        val p = Account.create(new Account(0, "", "", ""))
         p.id should not equal(0)
       }
     }
@@ -21,10 +21,10 @@ class PasswordSpec extends FlatSpec with ShouldMatchers {
   "List Passwords" should "return all the passwords" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        def p = new Password(0, "", "", "")
-        val u = AppDB.passwordTable insert Seq(p, p, p)
+        def p = new Account(0, "", "", "")
+        val u = AppDB.accountTable insert Seq(p, p, p)
         
-        Password.list.length should equal(3)
+        Account.list.length should equal(3)
       }
     }
   }
@@ -32,9 +32,9 @@ class PasswordSpec extends FlatSpec with ShouldMatchers {
   "getOne" should "return the one" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        val p = Password.create(new Password(0, "Password10", "", ""))
+        val p = Account.create(new Account(0, "Password10", "", ""))
         
-        val ret = Password.getOne(p.id)
+        val ret = Account.getOne(p.id)
         ret.password should equal("Password10")
       }
     }
@@ -43,12 +43,12 @@ class PasswordSpec extends FlatSpec with ShouldMatchers {
   "update" should "save new values" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        val p = Password.create(new Password(0, "Password10", "", ""))
+        val p = Account.create(new Account(0, "Password10", "", ""))
         p.password = "Password11"
           
-        Password.update(p)
+        Account.update(p)
         
-        val ret = Password.getOne(p.id)
+        val ret = Account.getOne(p.id)
         ret.password should equal("Password11")
       }
     }
@@ -57,16 +57,16 @@ class PasswordSpec extends FlatSpec with ShouldMatchers {
   "json pasrser" should "make the json" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-	    val p = new Password(0, "Password10", "title", "desc")
+	    val p = new Account(0, "Password10", "title", "desc")
 	    
-	    val j = Password.PasswordFormat.writes(p)
+	    val j = Account.AccountFormat.writes(p)
 	    j.toString should equal("""{"id":0,"password":"Password10","title":"title","description":"desc","permissions":[]}""")
       }
     }
   }
   
   "json parser" should "make the object" in {
-      val pw = Password.PasswordFormat.reads(Json.parse("""{"id":1,"password":"Password10", "title":"title", "description":"desc"}""")).get
+      val pw = Account.AccountFormat.reads(Json.parse("""{"id":1,"password":"Password10", "title":"title", "description":"desc"}""")).get
       
       pw.password should equal ("Password10")
       pw.title should equal("title")

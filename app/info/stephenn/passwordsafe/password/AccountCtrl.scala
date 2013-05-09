@@ -4,8 +4,9 @@ import play.api._
 import play.api.mvc._
 import play.api.libs.json._
 import info.stephenn.passwordsafe.auth._
+import info.stephenn.passwordsafe.password.Permission.PermissionFormat
 
-object PasswordCtrl extends Controller {
+object AccountCtrl extends Controller {
   
   def list = Action { implicit request =>
     getUser match {
@@ -17,40 +18,41 @@ object PasswordCtrl extends Controller {
   }
   
   def get(id: Long) = Action { implicit request =>
-    val p = Password.getOne(id)
-    Ok(Json.toJson(p))
+    val account = Account.getOne(id)
+    Ok(Json.toJson(account))
   }
   
   def delete(id: Long) = Action { implicit request =>
-    Password.getOne(id).delete
+    Account.getOne(id).delete
     Accepted
   }
   
   def update(id: Long) = Action(parse.json) { implicit request =>
-    val in = Json.fromJson[Password](request.body)
-    in.asOpt.map { in =>
-      Password.update(in)
-      Accepted
-    }.getOrElse {
-      BadRequest("couldnt parse request")
+    Json.fromJson[Account](request.body).asOpt match {
+      case None => BadRequest("couldnt parse request")
+      case Some(account) => {
+        Account.update(account)
+        Accepted
+      }
     }
   }
-  
+
   def create = Action(parse.json) { implicit request =>
-    val in= Json.fromJson[Password](request.body)
-    in.asOpt.map{ passwordIn =>
-      val password = Password.create(passwordIn)
-      
-      getIndividual match {
-        case None => NotFound("couldnt find user")
-        case Some(individual) => {
-          Permission.create(Permission(password, individual, true, true))
+    Json.fromJson[Account](request.body).asOpt match {
+      case None => BadRequest("Missing parameter")
+      case Some(inAccount) => {
+        //TODO shouldnt create account until i know who individual is
+        val accountCreated = Account.create(inAccount)
+
+        getIndividual match {
+          case None => NotFound("couldnt find user")
+          case Some(individual) => {
+            Permission.create(Permission(accountCreated, individual, true, true))
+          }
         }
+
+        Ok(Json.toJson(accountCreated))
       }
-      
-      Ok(Json.toJson(password))
-    }.getOrElse {
-      BadRequest("Missing parameter [password]")
     }
   }
   
@@ -58,14 +60,14 @@ object PasswordCtrl extends Controller {
     Json.fromJson[Permission](request.body).asOpt match {
       case None => BadRequest("permission expected.")
       case Some(permission) => {
-        val password = Password.getOne(permission.passwordID)
+        val account = Account.getOne(permission.accountID)
         getIndividual(request) match {
           case None => BadRequest("couldnt find individual")
           case Some(individual) => {
-            password.canWrite(individual) match {
+            account.canWrite(individual) match {
               case false => Forbidden
               case true => {
-                password.getPartyPermissions.find(_.partyID == permission.partyID) match {
+                account.getPartyPermissions.find(_.partyID == permission.partyID) match {
                   case None => Permission.create(permission)
                   case Some(existingPerm) => {
                     existingPerm.canRead = permission.canRead
@@ -83,7 +85,7 @@ object PasswordCtrl extends Controller {
   }
   
   def removePermission(passwordID: Long, partyID:Long) = Action { implicit request =>  
-    val password = Password.getOne(passwordID)
+    val password = Account.getOne(passwordID)
     getIndividual(request) match {
       case None => Forbidden
       case Some(individual) => {
