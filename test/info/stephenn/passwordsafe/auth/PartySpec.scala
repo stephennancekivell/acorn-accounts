@@ -19,7 +19,7 @@ class PartySpec extends FlatSpec with ShouldMatchers {
     var p1 = Party.create(Party(0, "Blue Team"))
     p1.id should not equal (0)
 
-    AppDB.userPartyTable.insert(Seq(UserParty(u1, p1), UserParty(u2, p1)))
+    AppDB.usersParties.insert(Seq(UserParty(u1, p1), UserParty(u2, p1)))
     p1
   }
 
@@ -41,7 +41,7 @@ class PartySpec extends FlatSpec with ShouldMatchers {
 
         val user = User.list.head
 
-        AppDB.userPartyTable.deleteWhere(up => (up.userID === user.id) and (up.partyID === p.id))
+        AppDB.usersParties.deleteWhere(up => (up.userID === user.id) and (up.partyID === p.id))
 
         p.users.toList.length should equal(1)
         p.users.head.name should equal("2")

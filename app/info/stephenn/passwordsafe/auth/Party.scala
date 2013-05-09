@@ -10,7 +10,7 @@ import play.Logger
 
 case class Party(val id: Long, var name: String, val isIndividual: Boolean) extends KeyedEntity[Long] {
   lazy val users = AppDB.userParty.left(this)
-  lazy val passwordPermissions = AppDB.partyPasswordPermission.left(this)
+  lazy val passwordPermissions = AppDB.partiesPermissions.left(this)
   
   def setUsers(usersToSet: Set[User]) = inTransaction {
     if (isIndividual && usersToSet.size > 1)
@@ -27,7 +27,7 @@ case class Party(val id: Long, var name: String, val isIndividual: Boolean) exte
   
   def delete = inTransaction {
     //TODO delete the userParties
-    AppDB.partyTable.delete(id)
+    AppDB.parties.delete(id)
   }  
   
 }
@@ -38,33 +38,33 @@ object Party {
   }
 
   def getOne(id: Long) = inTransaction {
-    AppDB.partyTable.get[Long](id)
+    AppDB.parties.get[Long](id)
   }
   
   def list = inTransaction {
-    AppDB.partyTable.iterator.toList
+    AppDB.parties.iterator.toList
   }
   
   def getGroups = inTransaction {
-    from(AppDB.partyTable)(p =>
+    from(AppDB.parties)(p =>
 	      where(p.isIndividual === false)
 	      select(p)
       ).toList
   }
   
   def getIndividual(user: User) = inTransaction {
-    from(AppDB.partyTable, AppDB.userPartyTable)((p, up) =>
+    from(AppDB.parties, AppDB.usersParties)((p, up) =>
 	        where(up.userID === user.id and up.partyID === p.id and p.isIndividual === true)
 	        select(p)
         ).headOption
   }
 
   def update(p: Party) = inTransaction {
-    AppDB.partyTable.update(p)
+    AppDB.parties.update(p)
   }
 
   def create(party: Party) = inTransaction {
-    AppDB.partyTable.insert(party)
+    AppDB.parties.insert(party)
   }
 
   implicit object PartyFormat extends Format[Party] {
@@ -93,10 +93,10 @@ object UserParty {
   }
 
   def remove(userParty: UserParty) = inTransaction {
-    AppDB.userPartyTable.deleteWhere(up => (up.partyID === userParty.partyID) and (up.userID === userParty.userID))
+    AppDB.usersParties.deleteWhere(up => (up.partyID === userParty.partyID) and (up.userID === userParty.userID))
   }
 
   def create(userParty: UserParty) = inTransaction {
-    AppDB.userPartyTable.insert(userParty)
+    AppDB.usersParties.insert(userParty)
   }
 }

@@ -22,7 +22,7 @@ class PasswordSpec extends FlatSpec with ShouldMatchers {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
         def p = new Account(0, "", "", "")
-        val u = AppDB.accountTable insert Seq(p, p, p)
+        val u = AppDB.accounts insert Seq(p, p, p)
         
         Account.list.length should equal(3)
       }

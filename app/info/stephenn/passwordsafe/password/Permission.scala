@@ -23,20 +23,20 @@ object Permission {
   }
   
   def list = inTransaction {
-	AppDB.passwordPermissionTable.iterator.toList
+	AppDB.permissions.iterator.toList
   }
   
   def remove(permission: Permission) = inTransaction {
-    AppDB.passwordPermissionTable.deleteWhere(pp => (pp.partyID === permission.partyID) and (pp.accountID === permission.accountID))
+    AppDB.permissions.deleteWhere(pp => (pp.partyID === permission.partyID) and (pp.accountID === permission.accountID))
   }
 
   def create(permission: Permission) = inTransaction {
-    AppDB.passwordPermissionTable.insertOrUpdate(permission)
+    AppDB.permissions.insertOrUpdate(permission)
   }
   
   def getUsersPasswords(user: User) = inTransaction {
     // this should probably have a sub select instead of being a 3 table join
-    from(AppDB.accountTable, AppDB.passwordPermissionTable, AppDB.userParty)((account, perm, userParty) =>
+    from(AppDB.accounts, AppDB.permissions, AppDB.userParty)((account, perm, userParty) =>
       where(userParty.userID === user.id and userParty.partyID === perm.partyID and perm.accountID === account.id)
       select(account)
       ).toList

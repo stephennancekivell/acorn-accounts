@@ -13,10 +13,10 @@ class Account(
     var password: String,
     var title: String,
     var description: String) extends KeyedEntity[Long] {
-  lazy val partyPermissions = AppDB.passwordPasswordPermission.left(Account.this)
+  lazy val partyPermissions = AppDB.accountsPermissions.left(Account.this)
   
   def delete = inTransaction {
-    AppDB.accountTable.delete(id)
+    AppDB.accounts.delete(id)
   }
   
   def getPartyPermissions = inTransaction {
@@ -35,19 +35,19 @@ class Account(
 object Account {
   
   def list = inTransaction {
-	AppDB.accountTable.iterator.toList
+	AppDB.accounts.iterator.toList
   }
   
   def getOne(id: Long) = inTransaction {
-    AppDB.accountTable.get[Long](id)
+    AppDB.accounts.get[Long](id)
   }
   
   def update(account: Account) = inTransaction {
-    AppDB.accountTable.update(account)
+    AppDB.accounts.update(account)
   }
   
   def create(account: Account) = inTransaction {
-    AppDB.accountTable.insert(account)
+    AppDB.accounts.insert(account)
   }
   
   implicit object AccountFormat extends Format[Account] {

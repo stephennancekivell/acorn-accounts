@@ -33,13 +33,13 @@ create table userparty (
 );
 alter table userparty add constraint userparty1 unique (partyid, userid);
 
-create table passwordpermission(
+create table permission(
 	partyid		bigint not null,
 	accountid	bigint not null,
 	canwrite	boolean,
 	canread		boolean
 );
-alter table passwordpermission add constraint passwordpermission1 unique (partyid, accountid);
+alter table permission add constraint permission1 unique (partyid, accountid);
 
 # --- !Downs
 

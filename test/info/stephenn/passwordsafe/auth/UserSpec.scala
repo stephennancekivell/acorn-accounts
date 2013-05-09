@@ -12,7 +12,7 @@ class SQUserSpec extends FlatSpec with ShouldMatchers {
   "A User" should "be creatable" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        val u = AppDB.userTable insert User(name="foo", id=0)
+        val u = AppDB.users insert User(name="foo", id=0)
         u.id should not equal(0)
       }
     }

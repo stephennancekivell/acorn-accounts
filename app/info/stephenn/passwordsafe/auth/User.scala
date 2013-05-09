@@ -15,7 +15,7 @@ case class User(var name: String, val id: Long) extends KeyedEntity[Long] {
   lazy val parties = AppDB.userParty.right(this)
   
   def delete = inTransaction {
-    AppDB.userTable.delete(id)
+    AppDB.users.delete(id)
   }
 }
 
@@ -23,19 +23,19 @@ object User {
   import info.stephenn.passwordsafe.AppDB._
   
   def list = inTransaction {
-    AppDB.userTable.iterator.toList
+    AppDB.users.iterator.toList
   }
   
   def getOne(id: Long) = inTransaction {
-    AppDB.userTable.get[Long](id)
+    AppDB.users.get[Long](id)
   }
   
   def get(name: String) = inTransaction {
-    from(AppDB.userTable)(u => where(u.name === name) select(u)).headOption
+    from(AppDB.users)(u => where(u.name === name) select(u)).headOption
   }
   
   def update(user: User) = inTransaction {
-    val u = AppDB.userTable.update(user)
+    val u = AppDB.users.update(user)
     var party = Party.getIndividual(user).get
     party.name = user.name
     Party.update(party)
@@ -44,7 +44,7 @@ object User {
   }
   
   def create(user: User) = inTransaction {
-    val u = AppDB.userTable.insert(user)
+    val u = AppDB.users.insert(user)
     var party = Party.create(Party(id = -1, name=user.name, isIndividual=true))
     party.setUsers(Set(user))
     
