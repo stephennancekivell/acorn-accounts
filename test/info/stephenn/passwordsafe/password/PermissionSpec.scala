@@ -11,10 +11,13 @@ import info.stephenn.passwordsafe.AppDB
 import info.stephenn.passwordsafe.auth._
 
 class PermissionSpec extends FlatSpec with ShouldMatchers {
+  
+  def defaultAccount = new Account(0, "", "" ,"" ,"")
+  
   "Permission" should "have a party and a permission" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        val pass = Account.create(new Account(0, "", "", ""))
+        val pass = Account.create(defaultAccount)
         val party = Party.create(Party(0, "Blue team"))
 
         val perm = Permission.create(Permission(pass, party, true, true))
@@ -28,7 +31,7 @@ class PermissionSpec extends FlatSpec with ShouldMatchers {
   "A Password" should "have many parties through their permissions" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        val pass = Account.create(new Account(0, "", "", ""))
+        val pass = Account.create(defaultAccount)
         val blue = Party.create(Party(0, "Blue team"))
         val red = Party.create(Party(0, "Red team"))
 
@@ -45,8 +48,8 @@ class PermissionSpec extends FlatSpec with ShouldMatchers {
       inTransaction {
         val party = Party.create(Party(0, "Blue team"))
         
-        val pass1 = Account.create(new Account(0, "", "", ""))
-        val pass2 = Account.create(new Account(0, "", "", ""))
+        val pass1 = Account.create(defaultAccount)
+        val pass2 = Account.create(defaultAccount)
         
         Permission.create(Permission(pass1, party, true, true))
         Permission.create(Permission(pass2, party, true, true))
@@ -59,7 +62,7 @@ class PermissionSpec extends FlatSpec with ShouldMatchers {
   "A Permission" should "be updatable" in {
     running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
       inTransaction {
-        val pass = Account.create(new Account(0, "", "", ""))
+        val pass = Account.create(defaultAccount)
         val party = Party.create(Party(0, "Blue team"))
 
         var perm = Permission.create(Permission(pass, party, true, true))

@@ -5,6 +5,7 @@
 # Home page
 GET		/passwords					info.stephenn.passwordsafe.password.AccountCtrl.list
 GET		/passwords/:id				info.stephenn.passwordsafe.password.AccountCtrl.get(id: Long)
+GET		/passwords/:id/password		info.stephenn.passwordsafe.password.AccountCtrl.getPassword(id: Long)
 POST	/passwords/-1				info.stephenn.passwordsafe.password.AccountCtrl.create
 POST	/passwords/:id				info.stephenn.passwordsafe.password.AccountCtrl.update(id: Long)
 DELETE	/passwords/:id				info.stephenn.passwordsafe.password.AccountCtrl.delete(id: Long)

@@ -10,9 +10,11 @@ import info.stephenn.passwordsafe.auth._
 
 class Account(
     val id: Long = 0,
-    var password: String,
+    var password: String = "",
     var title: String,
-    var description: String) extends KeyedEntity[Long] {
+    var username: String,
+    var description: String,
+    var hidden: Boolean = false) extends KeyedEntity[Long] {
   lazy val partyPermissions = AppDB.accountsPermissions.left(Account.this)
   
   def delete = inTransaction {
@@ -53,19 +55,16 @@ object Account {
   implicit object AccountFormat extends Format[Account] {
     def writes(account: Account): JsValue = inTransaction {
       Json.obj("id" -> account.id,
-          "password" -> account.password,
+          "username" -> account.username,
           "title" -> account.title,
           "description" -> account.description,
           "permissions" -> account.partyPermissions.toList)
     }
 
     def reads(js: JsValue) = {
-      val id = (js \ "id").as[Long]
-      val pw = (js \ "password").as[String]
-      
       JsSuccess(new Account(
-          id = id,
-          password = pw,
+          id = (js \ "id").as[Long],
+          username = (js \ "username").as[String],
           title = (js \ "title").as[String],
           description = (js \ "description").as[String]))
     }

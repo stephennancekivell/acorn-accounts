@@ -22,6 +22,11 @@ object AccountCtrl extends Controller {
     Ok(Json.toJson(account))
   }
   
+  def getPassword(id: Long) = Action { implicit request =>
+    val account = Account.getOne(id)
+    Ok(account.password)
+  }
+  
   def delete(id: Long) = Action { implicit request =>
     Account.getOne(id).delete
     Accepted
