@@ -24,7 +24,19 @@ object AccountCtrl extends Controller {
   
   def getPassword(id: Long) = Action { implicit request =>
     val account = Account.getOne(id)
-    Ok(account.password)
+    Ok(Json.toJson(new Password(account.password)))
+  }
+  
+  def setPassword(id: Long) = Action(parse.json) { implicit request =>
+    Json.fromJson[Password](request.body).asOpt match {
+      case None => BadRequest("couldnt parse request")
+      case Some(password) => {
+        val account = Account.getOne(id)
+	    account.password = password.password
+	    Account.update(account)
+	    Accepted
+      }
+    }
   }
   
   def delete(id: Long) = Action { implicit request =>

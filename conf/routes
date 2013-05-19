@@ -3,14 +3,15 @@
 # ~~~~
 
 # Home page
-GET		/passwords					info.stephenn.passwordsafe.password.AccountCtrl.list
-GET		/passwords/:id				info.stephenn.passwordsafe.password.AccountCtrl.get(id: Long)
-GET		/passwords/:id/password		info.stephenn.passwordsafe.password.AccountCtrl.getPassword(id: Long)
-POST	/passwords/-1				info.stephenn.passwordsafe.password.AccountCtrl.create
-POST	/passwords/:id				info.stephenn.passwordsafe.password.AccountCtrl.update(id: Long)
-DELETE	/passwords/:id				info.stephenn.passwordsafe.password.AccountCtrl.delete(id: Long)
-POST	/passwords/:id/permissions	info.stephenn.passwordsafe.password.AccountCtrl.addPermission(id: Long)
-DELETE	/passwords/:pass/permissions/:party	info.stephenn.passwordsafe.password.AccountCtrl.removePermission(pass: Long, party: Long)
+GET		/accounts					info.stephenn.passwordsafe.password.AccountCtrl.list
+GET		/accounts/:id				info.stephenn.passwordsafe.password.AccountCtrl.get(id: Long)
+GET		/accounts/:id/password		info.stephenn.passwordsafe.password.AccountCtrl.getPassword(id: Long)
+POST	/accounts/:id/password		info.stephenn.passwordsafe.password.AccountCtrl.setPassword(id: Long)
+POST	/accounts/-1				info.stephenn.passwordsafe.password.AccountCtrl.create
+POST	/accounts/:id				info.stephenn.passwordsafe.password.AccountCtrl.update(id: Long)
+DELETE	/accounts/:id				info.stephenn.passwordsafe.password.AccountCtrl.delete(id: Long)
+POST	/accounts/:id/permissions	info.stephenn.passwordsafe.password.AccountCtrl.addPermission(id: Long)
+DELETE	/accounts/:pass/permissions/:party	info.stephenn.passwordsafe.password.AccountCtrl.removePermission(pass: Long, party: Long)
 
 GET		/users						info.stephenn.passwordsafe.auth.UserCtrl.list
 GET		/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.get(id: Long)
