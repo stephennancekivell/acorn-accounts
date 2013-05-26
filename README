@@ -5,7 +5,9 @@ users
 
 TODO
 password permissions
-audit log
 encrypt passwords
+audit log
 update password should create a new one and flag the old one old. Should be able to display the old ones. 
 Name it. Acorn Accounts the password safe.
+creating a new user with the same username as another user should present a nice error. Not a generic constraint exception.
+Test coverage.
