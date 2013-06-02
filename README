@@ -5,9 +5,11 @@ users
 encrypt passwords
 
 TODO
+some simple login
+Name it. Acorn Accounts the password safe.
 password permissions
 audit log
-Name it. Acorn Accounts the password safe.
+Auto create user when new valid x-remote-user is found.
 creating a new user with the same username as another user should present a nice error. Not a generic constraint exception.
 Test coverage.
 export all passwords

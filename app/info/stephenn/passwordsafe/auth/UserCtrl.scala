@@ -25,6 +25,18 @@ object UserCtrl extends Controller {
     Accepted
   }
   
+  def getMe = Action { implicit request =>
+    request.headers.get("x-remote-user") match {
+      case None => Unauthorized
+      case Some(uname) => {
+        User.get(uname) match {
+          case Some(u) => Ok(Json.toJson(u))
+          case None => Unauthorized
+        }
+      }
+    }
+  }
+  
   def update(id: Long) = Action(parse.json) { implicit request =>
     val in = Json.fromJson[User](request.body)
     in.asOpt.map { in =>

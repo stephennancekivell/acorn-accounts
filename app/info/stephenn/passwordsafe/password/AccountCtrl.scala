@@ -10,7 +10,7 @@ object AccountCtrl extends Controller {
   
   def list = Action { implicit request =>
     getUser match {
-      case None => Forbidden
+      case None => Unauthorized
       case Some(user) => {
         Ok(Json.toJson(Permission.getUsersPasswords(user)))
       }

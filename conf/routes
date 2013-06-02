@@ -14,6 +14,7 @@ POST	/accounts/:id/permissions	info.stephenn.passwordsafe.password.AccountCtrl.a
 DELETE	/accounts/:pass/permissions/:party	info.stephenn.passwordsafe.password.AccountCtrl.removePermission(pass: Long, party: Long)
 
 GET		/users						info.stephenn.passwordsafe.auth.UserCtrl.list
+GET		/users/-1					info.stephenn.passwordsafe.auth.UserCtrl.getMe
 GET		/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.get(id: Long)
 POST	/users/-1					info.stephenn.passwordsafe.auth.UserCtrl.create
 POST	/users/:id					info.stephenn.passwordsafe.auth.UserCtrl.update(id: Long)
