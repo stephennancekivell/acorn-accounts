@@ -1,13 +1,12 @@
 package info.stephenn.passwordsafe.auth
 
 import play.api.mvc._
+import play.api.mvc.Results._
 import play.api.libs.json._
-
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text, optional}
-
 import org.squeryl.PrimitiveTypeMode._
-
+import info.stephenn.passwordsafe.AuthenticatedAction._
 
 object UserCtrl extends Controller {
   
@@ -25,16 +24,8 @@ object UserCtrl extends Controller {
     Accepted
   }
   
-  def getMe = Action { implicit request =>
-    request.headers.get("x-remote-user") match {
-      case None => Unauthorized
-      case Some(uname) => {
-        User.get(uname) match {
-          case Some(u) => Ok(Json.toJson(u))
-          case None => Unauthorized
-        }
-      }
-    }
+  def getMe = Authenticated { implicit request =>
+    Ok(Json.toJson(request.user))
   }
   
   def update(id: Long) = Action(parse.json) { implicit request =>
