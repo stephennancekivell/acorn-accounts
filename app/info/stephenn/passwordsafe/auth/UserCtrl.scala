@@ -10,16 +10,16 @@ import info.stephenn.passwordsafe.AuthenticatedAction._
 
 object UserCtrl extends Controller {
   
-  def list = Action { implicit request =>
+  def list = Authenticated { implicit request =>
     Ok(Json.toJson(User.list))
   }
   
-  def get(id: Long) = Action { implicit request =>
+  def get(id: Long) = Authenticated { implicit request =>
     val u = User.getOne(id)
     Ok(Json.toJson(u))
   }
   
-  def delete(id: Long) = Action { implicit request =>
+  def delete(id: Long) = Authenticated { implicit request =>
     User.getOne(id).delete
     Accepted
   }
@@ -28,7 +28,7 @@ object UserCtrl extends Controller {
     Ok(Json.toJson(request.user))
   }
   
-  def update(id: Long) = Action(parse.json) { implicit request =>
+  def update(id: Long) = Authenticated(parse.json) { implicit request =>
     val in = Json.fromJson[User](request.body)
     in.asOpt.map { in =>
       User.update(in)
@@ -38,7 +38,7 @@ object UserCtrl extends Controller {
     }
   }
   
-  def create = Action(parse.json) { implicit request =>
+  def create = Authenticated(parse.json) { implicit request =>
     //TODO not all users should have the permission to do this.
     //Need a admin group
     val in= Json.fromJson[User](request.body)
