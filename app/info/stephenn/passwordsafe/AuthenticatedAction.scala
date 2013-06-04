@@ -17,13 +17,31 @@ object AuthenticatedAction {
       request.headers.get("x-remote-user") match {
         case None => Unauthorized
         case Some(username) => {
-          val user = User.get(username) match {
-            case Some(u) => u
-            case None => {
-              User.create(new User(username, -1))
+          // We could be handling concurrent requests.
+          // If those require creating the user a unique constraint violation is likely.
+          // If that happens retry, and select the new one.
+          val user = getOrCreate(username, 3)
+          
+          f(AuthenticatedRequest(user, request))
+        }
+      }
+    }
+  }
+  
+  def getOrCreate(username: String, retry: Int): User = {
+    User.get(username) match {
+      case Some(u) => u
+      case None => {
+        try {
+          User.create(new User(username, -1))
+        } catch {
+          case e: Exception => {
+            if (retry > 0) {
+            	getOrCreate(username, retry -1)
+            } else {
+              throw e
             }
           }
-          f(AuthenticatedRequest(user, request))
         }
       }
     }
