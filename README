@@ -5,10 +5,11 @@ users
 encrypt passwords
 some simple login
 Auto create user when new valid x-remote-user is found.
+Name it. Acorn Accounts the password safe.
 
 TODO
 logout
-Name it. Acorn Accounts the password safe.
+Marketing page should list some of the features
 password permissions
 Test coverage.
 minify the contrib stuff.
