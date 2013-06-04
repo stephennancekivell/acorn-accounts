@@ -4,8 +4,9 @@ SCRIPT_DIR=`dirname $0`
 
 SERVER=stephenn.info
 TARGET=/home/acornaccounts/server
-SERVICE=password-safe-server
-INIT_CONF=password-safe-server.conf
+SERVICE=acorn-accounts
+INIT_CONF=acorn-accounts.conf
+USER=acornaccounts
 
 if [[ -z "$1" ]]; then
 	echo "usage: deploy.sh dist.zip"
@@ -23,7 +24,7 @@ ssh stephenn.info <<EOF
 	unzip $DIST_FILE -d $TARGET/dist
 	mv $TARGET/dist/*/* $TARGET/dist/
 	chmod a+x $TARGET/dist/start
-	sudo chown -R acornaccounts $TARGET
+	sudo chown -R $USER $TARGET
 	sudo service $SERVICE start
 	#rm $DIST_FILE
 EOF
