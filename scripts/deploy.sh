@@ -1,23 +1,26 @@
 #!/bin/bash
 
-SERVER=stephenn.com
-TARGET=/home/acornaccounts/acorn-accounts
+SCRIPT_DIR=`dirname $0`
+
+SERVER=stephenn.info
+TARGET=/home/acornaccounts/server
 SERVICE=acorn-accounts
 INIT_CONF=acorn-accounts.conf
 USER=acornaccounts
+PLAY=~/bin/play-2.1.1/play
 
-PLAY="~/bin/play-2.1.1/play"
+cd $SCRIPT_DIR/..
+#$PLAY clean compile stage
+
 
 ssh $SERVER sudo service $SERVICE stop
 
-ssh $USER@$SERVER <<EOF
-	cd $TARGET
-	git pull
-	$PLAY clean compile stage
-EOF
+rsync -v --recursive --delete --compress $SCRIPT_DIR/../target/staged/ $USER@$SERVER:/$TARGET/dist/staged
+rsync -v --recursive --delete --compress $SCRIPT_DIR/../target/start $USER@$SERVER:/$TARGET/dist/start
 
-ssh $SERVER <<EOF
-	cd $TARGET
-	sudo cp scripts/$INIT_CONF /etc/init/$INIT_CONF
-	sudo service $SERVICE start  
+scp $SCRIPT_DIR/$INIT_CONF $SERVER:.
+
+ssh stephenn.info <<EOF
+	sudo mv $INIT_CONF /etc/init/
+	sudo service $SERVICE start
 EOF
