@@ -6,9 +6,9 @@ SERVICE=acorn-accounts
 INIT_CONF=acorn-accounts.conf
 USER=acornaccounts
 
-PLAY="~/bin/play-2.1.0/play"
+PLAY="~/bin/play-2.1.1/play"
 
-ssh $SERVER sudo service stop $SERVICE
+ssh $SERVER sudo service $SERVICE stop
 
 ssh $USER@$SERVER <<EOF
 	cd $TARGET
@@ -19,5 +19,5 @@ EOF
 ssh $SERVER <<EOF
 	cd $TARGET
 	sudo cp scripts/$INIT_CONF /etc/init/$INIT_CONF
-	sudo service start $SERVICE 
+	sudo service $SERVICE start  
 EOF
