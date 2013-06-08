@@ -10,7 +10,7 @@ USER=acornaccounts
 PLAY=~/bin/play-2.1.1/play
 
 cd $SCRIPT_DIR/..
-#$PLAY clean compile stage
+$PLAY clean compile stage
 
 
 ssh $SERVER sudo service $SERVICE stop
