@@ -1,30 +1,23 @@
 #!/bin/bash
 
-SCRIPT_DIR=`dirname $0`
-
-SERVER=stephenn.info
-TARGET=/home/acornaccounts/server
+SERVER=stephenn.com
+TARGET=/home/acornaccounts/acorn-accounts
 SERVICE=acorn-accounts
 INIT_CONF=acorn-accounts.conf
 USER=acornaccounts
 
-if [[ -z "$1" ]]; then
-	echo "usage: deploy.sh dist.zip"
-	exit 0
-fi
+PLAY="~/bin/play-2.1.0/play"
 
-#scp $1 $SERVER:.
-DIST_FILE=`basename $1`
-scp $SCRIPT_DIR/$INIT_CONF $SERVER:.
+ssh $SERVER sudo service stop $SERVICE
 
-ssh stephenn.info <<EOF
-	sudo service $SERVICE stop
-	sudo mv $INIT_CONF /etc/init/
-	rm -r $TARGET/dist/*
-	unzip $DIST_FILE -d $TARGET/dist
-	mv $TARGET/dist/*/* $TARGET/dist/
-	chmod a+x $TARGET/dist/start
-	sudo chown -R $USER $TARGET
-	sudo service $SERVICE start
-	#rm $DIST_FILE
+ssh $USER@$SERVER <<EOF
+	cd $TARGET
+	git pull
+	$PLAY clean compile stage
+EOF
+
+ssh $SERVER <<EOF
+	cd $TARGET
+	sudo cp scripts/$INIT_CONF /etc/init/$INIT_CONF
+	sudo service start $SERVICE 
 EOF
