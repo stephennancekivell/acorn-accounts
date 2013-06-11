@@ -14,7 +14,7 @@ create sequence s_account_id;
 
 create table account (
   id    bigint DEFAULT nextval('s_account_id') primary key,
-  title  varchar(256),
+  name  varchar(256),
   password varchar(256),
   description varchar(4000),
   hidden boolean,
