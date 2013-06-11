@@ -11,7 +11,7 @@ import info.stephenn.passwordsafe.auth._
 class Account(
     val id: Long = 0,
     var password: String = "",
-    var title: String,
+    var name: String,
     var username: String,
     var description: String,
     var hidden: Boolean = false) extends KeyedEntity[Long] {
@@ -56,7 +56,7 @@ object Account {
     def writes(account: Account): JsValue = inTransaction {
       Json.obj("id" -> account.id,
           "username" -> account.username,
-          "title" -> account.title,
+          "name" -> account.name,
           "description" -> account.description,
           "permissions" -> account.partyPermissions.toList)
     }
@@ -65,7 +65,7 @@ object Account {
       JsSuccess(new Account(
           id = (js \ "id").as[Long],
           username = (js \ "username").as[String],
-          title = (js \ "title").as[String],
+          name = (js \ "name").as[String],
           description = (js \ "description").as[String]))
     }
   }
