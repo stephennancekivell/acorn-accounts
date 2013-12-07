@@ -35,3 +35,6 @@ TODO
 * Document install process
 * How do you become a registered business. Do I want that.
 * Email Notifications
+
+![screenshot](./screenshot1.png)
+![screenshot](./screenshot2.png)
